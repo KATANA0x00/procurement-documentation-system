@@ -23,7 +23,7 @@ async function buildDoc (key) {
 
   const docBase = {
     defaultStyle: { font: 'Sarabun', fontSize: 10, lineHeight: 1.2 },
-    content: [...docDefinition_P01()],
+    content: [...Definition[key]()],
     header: (currentPage, pageCount, pageSize) => {
       if (currentPage === 1) return null
       return {
