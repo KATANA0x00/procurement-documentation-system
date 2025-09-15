@@ -4,7 +4,7 @@ import fs from 'fs'
 const docLogoRaw = path.resolve('./app/assets/doc_logo.png')
 const docLogo = fs.readFileSync(docLogoRaw).toString('base64')
 
-export function header () {
+export function header() {
   return [
     {
       image: 'data:image/png;base64,' + docLogo,

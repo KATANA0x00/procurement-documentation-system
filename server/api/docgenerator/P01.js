@@ -1,4 +1,5 @@
 import { header } from './template/header'
+import { unique } from './template/unique'
 import { sign } from './template/sign'
 
 export function docDefinition_P01 () {
@@ -25,7 +26,7 @@ export function docDefinition_P01 () {
             },
             { text: 'จำนวน\n(หน่วย)', bold: true, alignment: 'center' },
             { text: 'ราคาประมาณ\n(บาท)', bold: true, alignment: 'center' },
-            { text: 'กำหนดเวลาที่ต้องใช้', bold: true, alignment: 'center' }
+            { text: 'กำหนดเวลา\nที่ต้องใช้', bold: true, alignment: 'center' }
           ],
           [
             { text: '1.', alignment: 'center' },
@@ -171,6 +172,7 @@ export function docDefinition_P01 () {
       canvas: [
         { type: 'line', x1: 255, y1: -330, x2: 255, y2: 10, lineWidth: 1 }
       ]
-    }
+    },
+    ...unique()
   ]
 }
