@@ -1,0 +1,162 @@
+<template>
+  <div>
+    <div class="tableHeader">
+      <span></span>
+      <span></span>
+      <span>รายการ</span>
+      <span>จำนวน</span>
+      <span>หน่วย</span>
+      <span style="text-align: end">ราคา/หน่วย</span>
+      <span style="text-align: end">ราคารวม</span>
+    </div>
+    <div
+      v-if="datas.length === 0"
+      style="
+        text-align: center;
+        padding: 5px 0;
+        color: var(--color-sub-dark);
+        font-size: large;
+      "
+    >
+      ไม่มีรายการ
+    </div>
+    <draggable
+      v-model="datas"
+      handle=".drag-handle"
+      item-key="id"
+      animation="200"
+    >
+      <template #item="{ element, index }">
+        <DocRow
+          v-model:data="datas[index]"
+          :index="index"
+          :isAlt="index % 2 === 0"
+          @remove="datas.splice(index, 1)"
+        />
+      </template>
+    </draggable>
+    <div class="tableEnd">
+      <div style="display: flex; justify-content: space-between">
+        <button
+          @click="
+            datas.push({ qty: 0, name: '', unit: '', price: 0, total: 0 })
+          "
+        >
+          เพิ่มรายการ
+        </button>
+        <button @click="isVAT = !isVAT">
+          ราคารายการ{{ isVAT ? "ไม่" : "" }}รวมภาษี
+        </button>
+      </div>
+
+      <span style="text-align: end" class="hightlight">ราคารวมรายการ</span>
+      <span style="text-align: end; padding-right: 10px" class="hightlight">
+        {{
+          numBreak  ((isVAT ? summarize() : summarize() - summarize() * 0.07).toFixed(2))
+        }}
+      </span>
+      <span></span>
+      <span style="text-align: end">รวมภาษีมูลค่าเพิ่ม 7%</span>
+      <span style="text-align: end; padding-right: 10px">{{
+        numBreak((summarize() * 0.07).toFixed(2))
+      }}</span>
+      <span></span>
+      <span
+        style="
+          font-weight: 600;
+          text-align: end;
+          border-bottom-left-radius: 8px;
+        "
+        class="hightlight"
+        >รวมเป็นเงินทั้งสิ้น</span
+      >
+      <span
+        style="font-weight: 600; text-align: end; padding-right: 10px"
+        class="hightlight"
+        >{{
+          numBreak((isVAT ? summarize() + summarize() * 0.07 : summarize()).toFixed(2))
+        }}</span
+      >
+    </div>
+  </div>
+</template>
+
+<script setup>
+import draggable from "vuedraggable";
+const isVAT = ref(false);
+const datas = defineModel("data", { default: [] });
+
+function summarize() {
+  if (datas.value === null) {
+    return 0;
+  }
+  return datas.value.reduce((acc, item) => acc + item.total, 0);
+}
+
+watch(
+  () =>
+    datas.value.map((item) => ({
+      qty: item.qty,
+      price: item.price,
+      total: item.total,
+    })),
+  (newVal, oldVal) => {
+    newVal.forEach((item, i) => {
+      const old = oldVal?.[i];
+      if (!old) return;
+
+      if (item.qty !== old.qty || item.price !== old.price) {
+        datas.value[i].total = datas.value[i].qty * datas.value[i].price;
+      } else if (item.total !== old.total) {
+        if (datas.value[i].qty > 0) {
+          datas.value[i].price = datas.value[i].total / datas.value[i].qty;
+        }
+      }
+    });
+  },
+  { deep: true }
+);
+</script>
+
+<style scoped>
+.tableHeader {
+  display: grid;
+  grid-template-columns: 0.4fr 0.4fr 6fr 1fr 1fr 2fr 2fr;
+  margin: 20px 0 10px 0;
+  padding: 0 10px;
+
+  span {
+    color: var(--color-sub-dark);
+  }
+}
+
+.tableEnd {
+  border-top: 1px solid var(--color-sub-mid);
+  display: grid;
+  grid-template-columns: 8.8fr 2fr 2fr;
+
+  button {
+    width: max-content;
+    padding: 5px 15px;
+    color: #fff;
+    background-color: var(--color-orange);
+    border: var(--color-orange) 1px solid;
+    border-bottom-right-radius: 8px;
+  }
+
+  button:hover {
+    color: var(--color-orange);
+    background-color: #fff;
+    border: var(--color-orange) 1px solid;
+  }
+
+  span {
+    padding: 5px 0;
+  }
+
+  .hightlight {
+    background-color: var(--color-orange);
+    color: #fff;
+  }
+}
+</style>
