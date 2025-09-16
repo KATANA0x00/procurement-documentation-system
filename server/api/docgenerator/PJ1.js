@@ -62,6 +62,9 @@ export function docDefinition_PJ1 () {
             {text:'5,000', alignment:'right'},
             {text:'30,000',alignment:'right'}
           ],
+          ...Array.from({ length: 25 }, (_,index) => [
+            { text: `${index+2}.`, alignment: 'center'}, {}, {}, {}, {}, {}, {}
+          ]),
           [
             {},
             {},
@@ -95,6 +98,7 @@ export function docDefinition_PJ1 () {
     },
     ...unique(),
     { text: '', pageBreak: 'before' },
+    { text: ' '},
     { text: 'และพร้อมกันนี้ได้แนบเอกสารประกอบการพิจารณา ดังนี้'},
     {
       text: [
