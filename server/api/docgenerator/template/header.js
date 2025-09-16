@@ -4,15 +4,15 @@ import fs from 'fs'
 const docLogoRaw = path.resolve('./app/assets/doc_logo.png')
 const docLogo = fs.readFileSync(docLogoRaw).toString('base64')
 
-export function header() {
+export function header(Header,docmark='') {
   return [
     {
       image: 'data:image/png;base64,' + docLogo,
       width: 60,
       margin: [0, 0, 0, -50]
     },
-    { text: 'แบบ พ.1', alignment: 'right' },
-    { text: 'บันทึกขอจัดหา', bold: true, alignment: 'center', fontSize: 14 },
+    { text: docmark, alignment: 'right' },
+    { text: Header, bold: true, alignment: 'center', fontSize: 14 },
     { text: ' ' },
     { text: ' ' },
     {

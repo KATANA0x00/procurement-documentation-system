@@ -4,7 +4,7 @@ import { sign } from './template/sign'
 
 export function docDefinition_P01 () {
   return [
-    ...header(),
+    ...header('บันทึกขอจัดหา','แบบ พ"1'),
     { text: ' ' },
     {
       table: {
