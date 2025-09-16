@@ -3,6 +3,7 @@ import path from 'path'
 import PDFMerger from 'pdf-merger-js'
 
 import { docDefinition_P01 } from './P01'
+import { docDefinition_PJ1 } from './PJ1'
 
 const fonts = {
   Sarabun: {
@@ -17,7 +18,8 @@ const printer = new PdfPrinter(fonts)
 
 async function buildDoc (key) {
   const Definition = {
-    P01: docDefinition_P01
+    P01: docDefinition_P01,
+    PJ1: docDefinition_PJ1
   }
   if (!Definition[key]) return null
 
