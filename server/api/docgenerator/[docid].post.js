@@ -1,0 +1,123 @@
+import PdfPrinter from 'pdfmake'
+import path from 'path'
+import fs from 'fs'
+import PDFMerger from 'pdf-merger-js'
+
+import { docDefinition_P01 } from './template/P01'
+import { docDefinition_PJ1 } from './template/PJ1'
+
+import { connectPG } from '../connection'
+
+const fonts = {
+  Sarabun: {
+    normal: path.resolve('./app/assets/fonts/Sarabun-light.ttf'),
+    bold: path.resolve('./app/assets/fonts/Sarabun-SemiBold.ttf'),
+    italics: path.resolve('./app/assets/fonts/Sarabun-Italic.ttf'),
+    bolditalics: path.resolve('./app/assets/fonts/Sarabun-BoldItalic.ttf')
+  }
+}
+
+const printer = new PdfPrinter(fonts)
+
+async function buildDoc (key, data) {
+  const Definition = {
+    P01: docDefinition_P01,
+    PJ1: docDefinition_PJ1
+  }
+  if (!Definition[key]) return null
+
+  const docBase = {
+    defaultStyle: { font: 'Sarabun', fontSize: 10, lineHeight: 1.2 },
+    content: [...Definition[key](data)],
+    header: (currentPage, pageCount, pageSize) => {
+      if (currentPage === 1) return null
+      return {
+        text: `- ${currentPage} -`,
+        alignment: 'center',
+        margin: [0, 20, 0, 0]
+      }
+    }
+  }
+
+  const pdfDoc = printer.createPdfKitDocument(docBase)
+  const chunks = []
+
+  pdfDoc.on('data', chunk => chunks.push(chunk))
+
+  return new Promise(resolve => {
+    pdfDoc.on('end', () => resolve(Buffer.concat(chunks)))
+    pdfDoc.end()
+  })
+}
+
+export default defineEventHandler(async event => {
+  const { docNeed } = await readBody(event)
+  const { docid } = await event.context.params
+
+  const client = connectPG()
+  client.connect()
+  const result = await client.query(
+    `
+      SELECT
+        dc.doc_id_p01,
+        dc.doc_id_pj1,
+        dc.doc_type,
+        dc.doc_category,
+        dc.doc_money_source,
+        dc.doc_money_year,
+        dc.doc_requester,
+        dp.principal AS principal,
+        dp.procurementer AS procurementer,
+        dp.name AS department,
+        dp.uid AS uid_department,
+        dc.doc_reason,
+        dc.doc_committee,
+        dc.uid_fund,
+        dc.uid_plan,
+        dc.uid_work_main,
+        dc.uid_work_sub,
+        dc.uid_work_minor,
+        dc.uid_expenses_category,
+        dc.uid_expenses_type,
+        dc.uid_expenses_subtype,
+        dc.uid_expenses_minor,
+        dc.doc_list,
+        dc.expenses_summary,
+        dc.doc_file,
+        dc.is_vat_included
+      FROM documents dc
+      JOIN departments dp ON dc.department = dp.id
+      WHERE dc.id = $1
+    `,
+    [docid]
+  )
+  client.end()
+
+  const merger = new PDFMerger()
+
+  for (const docKey of docNeed) {
+    const buffer = await buildDoc(docKey, result.rows[0])
+    if (buffer) {
+      await merger.add(buffer)
+    }
+  }
+
+  if (docNeed.includes('AFI')) {
+    const localFiles = result.rows[0].doc_file.map(item =>
+      path.join(process.cwd(), 'uploads', docid, item.file)
+    )
+
+    for (const filePath of localFiles) {
+      if (fs.existsSync(filePath)) {
+        await merger.add(filePath)
+      }
+    }
+  }
+
+  const mergedPdfBuffer = await merger.saveAsBuffer()
+
+  setHeader(event, 'Content-Type', 'application/pdf')
+  setHeader(event, 'Content-Disposition', 'attachment; filename=report.pdf')
+
+  return mergedPdfBuffer
+})

@@ -1,10 +1,12 @@
-import { header } from './template/header'
-import { unique } from './template/unique'
-import { sign } from './template/sign'
+import { header } from './header'
+import { unique } from './unique'
+import { sign } from './sign'
 
-export function docDefinition_P01 () {
+import numBreak from '~/composables/numBreak'
+
+export function docDefinition_P01 (data) {
   return [
-    ...header('บันทึกขอจัดหา','แบบ พ.1'),
+    ...header(data, 'p01', 'บันทึกขอจัดหา', 'แบบ พ.1'),
     { text: ' ' },
     {
       table: {
@@ -30,9 +32,9 @@ export function docDefinition_P01 () {
           ],
           [
             { text: '1.', alignment: 'center' },
-            { text: 'A', alignment: 'left' },
-            { text: '1 รายการ', alignment: 'center' },
-            { text: '1,000,000.00', alignment: 'right' },
+            { text: data.doc_category, alignment: 'left' },
+            { text: data.doc_list.length + ' รายการ', alignment: 'center' },
+            { text: numBreak((Math.ceil(data.expenses_summary / 1000) * 1000).toFixed(2)), alignment: 'right' },
             {}
           ],
           [' ', {}, {}, {}, {}],
@@ -46,7 +48,7 @@ export function docDefinition_P01 () {
             },
             {},
             {},
-            { text: '1,000,000.00', alignment: 'right' },
+            { text: numBreak((Math.ceil(data.expenses_summary / 1000) * 1000).toFixed(2)), alignment: 'right' },
             { text: ' ', border: [true, true, false, false] }
           ],
           [
@@ -102,12 +104,12 @@ export function docDefinition_P01 () {
             table: {
               widths: [2, '*', 95],
               body: [
-                [{}, '4.1 ผศ.ดร.ธนวิชญ์ อนุวงศ์พินิจ', 'ประธานกรรมการ'],
-                [{}, '4.2 ผศ.สรพงษ์ วชิรรัตนพรกุล', 'กรรมการ'],
-                [{}, '4.3 ดร.นัชนัยน์ รุ่งเหมือนฟ้า', 'กรรมการและเลขานุการ'],
+                [{}, '4.1 ' + data.doc_committee[0], 'ประธานกรรมการ'],
+                [{}, '4.2 ' + data.doc_committee[1], 'กรรมการ'],
+                [{}, '4.3 ' + data.doc_committee[2], 'กรรมการและเลขานุการ'],
                 [
                   {
-                    text: 'จึงเรียนมาเพื่อโปรดพิจารณาเห็นชอบให้ดำเนินการจัดหาพัสดุข้างต้นต่อไปด้วยจักขอบคุณอย่างยิ่ง',
+                    text: 'จึงเรียนมาเพื่อโปรดพิจารณาเห็นชอบให้ดำเนินการจัดหาพัสดุ\nข้างต้นต่อไปด้วยจักขอบคุณอย่างยิ่ง',
                     colSpan: 3
                   },
                   {},
@@ -116,8 +118,8 @@ export function docDefinition_P01 () {
               ]
             }
           },
-          sign('ผู้ช่วยศาสตราจารย์ ดร.ธนวิชญ์  อนุวงศ์พินิจ', 'ผู้ขอให้จัดหา'),
-          sign('ผู้ช่วยศาสตราจารย์ ดร.อำนาจ  ขาวเน', 'หัวหน้าภาควิชา')
+          sign(data.doc_requester, 'ผู้ขอให้จัดหา'),
+          sign(data.principal, 'หัวหน้าภาควิชา')
         ],
         [
           {
@@ -173,6 +175,7 @@ export function docDefinition_P01 () {
         { type: 'line', x1: 255, y1: -330, x2: 255, y2: 10, lineWidth: 1 }
       ]
     },
-    ...unique()
+    { text: '', pageBreak: 'before' },
+    ...unique(data)
   ]
 }

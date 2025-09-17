@@ -28,7 +28,7 @@
 <style scoped>
 .contentHeader {
     display: grid;
-    grid-template-columns: 1fr 6.5fr 2fr 2fr 1.5fr;
+    grid-template-columns: 1.5fr 6.5fr 2fr 2fr 2fr;
 
     span {
         color: var(--color-sub-dark);

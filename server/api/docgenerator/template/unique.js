@@ -1,143 +1,248 @@
-export function unique () {
+export function unique (data) {
   return [
-    { text: '', pageBreak: 'before' },
     { text: ' ' },
     { text: 'หน่วยงานขอใช้เงินในการจัดหา  ตามรหัสดังนี้' },
     {
       layout: 'noBorders',
       table: {
-        widths: [17, 24, 25, 32, '*', 17, 65, 48, 24],
+        widths: [17, 24, 25, 32, '*', 17, 65, 38, 48],
         body: [
           [
-            { text: 'วิทยาเขต/คณะ/สำนัก/บัณฑิต', colSpan: 4 },
+            {
+              text: 'วิทยาเขต/คณะ/สำนัก/บัณฑิต',
+              colSpan: 4
+            },
             {},
             {},
             {},
             { text: 'คณะวิศวกรรมศาสตร์' },
-            { text: 'รหัสวิทยาเขต/คณะ/สำนัก/บัณฑิต', colSpan: 3 },
+            {
+              text: 'รหัสวิทยาเขต/คณะ/สำนัก/บัณฑิต',
+              colSpan: 3
+            },
             {},
             {},
             { text: '01' }
           ],
           [
-            { text: 'ภาควิชา/กอง/ฝ่าย', colSpan: 3 },
+            {
+              text: 'ภาควิชา/กอง/ฝ่าย',
+              colSpan: 3
+            },
             {},
             {},
-            { text: 'ภาควิศวกรรมระบบไอโอทีและสารสนเทศ', colSpan: 2 },
+            {
+              text: data.department,
+              colSpan: 2
+            },
             {},
-            { text: 'รหัสภาควิชา/กอง/ฝ่าย', colSpan: 2 },
+            {
+              text: 'รหัสภาควิชา/กอง/ฝ่าย',
+              colSpan: 2
+            },
             {},
-            { text: '01340', colSpan: 2 },
+            {
+              text: data.uid_department,
+              colSpan: 2
+            },
             {}
           ],
           [
-            { text: 'กองทุน', colSpan: 2 },
+            {
+              text: 'กองทุน',
+              colSpan: 2
+            },
             {},
-            { text: 'เพื่อการศึกษา', colSpan: 3 },
+            {
+              text: data.uid_fund.text,
+              colSpan: 3
+            },
             {},
             {},
-            { text: 'รหัสกองทุน', colSpan: 2 },
+            {
+              text: 'รหัสกองทุน',
+              colSpan: 2
+            },
             {},
-            { text: '0200', colSpan: 2 },
+            {
+              text: data.uid_fund.uid,
+              colSpan: 2
+            },
             {}
           ],
           [
-            { text: 'แผนงาน', colSpan: 2 },
+            {
+              text: 'แผนงาน',
+              colSpan: 2
+            },
             {},
-            { text: 'จัดการศึกษาอุดมศึกษา', colSpan: 3 },
+            {
+              text: data.uid_plan.text,
+              colSpan: 3
+            },
             {},
             {},
-            { text: 'รหัสแผนงาน', colSpan: 2 },
+            {
+              text: 'รหัสแผนงาน',
+              colSpan: 2
+            },
             {},
-            { text: '09007', colSpan: 2 },
+            {
+              text: data.uid_plan.text,
+              colSpan: 2
+            },
             {}
           ],
           [
             { text: 'งาน' },
-            { text: '- กิจกรรมหลัก', colSpan: 2 },
+            {
+              text: '- กิจกรรมหลัก',
+              colSpan: 2
+            },
             {},
-            { text: 'งานจัดการศึกษาด้านวิทยาศาสตร์และเทคโนโลยี', colSpan: 2 },
+            {
+              text: data.uid_work_main.text,
+              colSpan: 2
+            },
             {},
             { text: 'รหัส' },
             { text: '- กิจกรรมหลัก' },
-            { text: '0102', colSpan: 2 },
+            {
+              text: data.uid_work_main.uid,
+              colSpan: 2
+            },
             {}
           ],
           [
+            { text: '' },
+            {
+              text: '- กิจกรรมรอง',
+              colSpan: 2
+            },
             {},
-            { text: '- กิจกรรมรอง', colSpan: 2 },
+            {
+              text: data.uid_work_sub.text,
+              colSpan: 2
+            },
             {},
-            { text: 'สาขาวิศวกรรมศาสตร์', colSpan: 2 },
-            {},
-            {},
+            { text: '' },
             { text: '- กิจกรรมรอง' },
-            { text: '22', colSpan: 2 },
+            {
+              text: data.uid_work_sub.uid,
+              colSpan: 2
+            },
             {}
           ],
           [
+            { text: '' },
+            {
+              text: '- กิจกรรมย่อย',
+              colSpan: 2
+            },
             {},
-            { text: '- กิจกรรมย่อย', colSpan: 2 },
+            {
+              text: data.uid_work_minor.text,
+              colSpan: 2
+            },
             {},
-            { text: 'ระดับปริญญาตรี', colSpan: 2 },
-            {},
-            {},
+            { text: '' },
             { text: '- กิจกรรมย่อย' },
-            { text: '211', colSpan: 2 },
+            {
+              text: data.uid_work_minor.uid,
+              colSpan: 2
+            },
             {}
           ],
           [
-            { text: 'งบรายจ่าย', colSpan: 3 },
+            {
+              text: 'งบรายจ่าย',
+              colSpan: 3
+            },
             {},
             {},
-            { text: 'งบดำเนินการ', colSpan: 2 },
+            {
+              text: data.uid_expenses_category.text,
+              colSpan: 2
+            },
             {},
-            { text: 'รหัสงบรายจ่าย', colSpan: 2 },
+            {
+              text: 'รหัสงบรายจ่าย',
+              colSpan: 2
+            },
             {},
-            { text: '52000', colSpan: 2 },
+            {
+              text: data.uid_expenses_category.uid,
+              colSpan: 2
+            },
             {}
           ],
           [
-            { text: 'ประเภทรายจ่าย', colSpan: 3 },
+            {
+              text: 'ประเภทรายจ่าย',
+              colSpan: 3
+            },
             {},
             {},
-            { text: 'ค่าวัสดุ', colSpan: 2 },
+            {
+              text: data.uid_expenses_type.text,
+              colSpan: 2
+            },
             {},
-            { text: 'รหัสประเภทรายจ่าย', colSpan: 2 },
+            {
+              text: 'รหัสประเภทรายจ่าย',
+              colSpan: 2
+            },
             {},
-            { text: '52500', colSpan: 2 },
+            {
+              text: data.uid_expenses_type.uid,
+              colSpan: 2
+            },
             {}
           ],
           [
-            { text: 'ประเภทค่าใช้จ่าย', colSpan: 3 },
+            {
+              text: 'ประเภทค่าใช้จ่าย',
+              colSpan: 3
+            },
             {},
             {},
-            { text: 'ค่าวัสดุที่ใช้ไป', colSpan: 2 },
+            {
+              text: data.uid_expenses_subtype.text,
+              colSpan: 2
+            },
             {},
-            { text: 'รหัสประเภทค่าใช้จ่าย', colSpan: 2 },
+            {
+              text: 'รหัสประเภทค่าใช้จ่าย',
+              colSpan: 2
+            },
             {},
-            { text: '5104010000', colSpan: 2 },
+            {
+              text: data.uid_expenses_subtype.uid,
+              colSpan: 2
+            },
             {}
           ],
           [
-            { text: 'ค่าใช้จ่าย', colSpan: 3 },
+            {
+              text: 'ค่าใช้จ่าย',
+              colSpan: 3
+            },
             {},
             {},
-            { text: 'ค่าวัสดุการศึกษาที่ใช้ไป', colSpan: 2 },
+            {
+              text: data.uid_expenses_minor.text,
+              colSpan: 2
+            },
             {},
-            { text: 'รหัสค่าใช้จ่าย', colSpan: 2 },
+            {
+              text: 'รหัสค่าใช้จ่าย',
+              colSpan: 2
+            },
             {},
-            { text: '5104040103', colSpan: 2 },
-            {}
-          ],
-          [
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
-            {},
+            {
+              text: data.uid_expenses_minor.uid,
+              colSpan: 2
+            },
             {}
           ]
         ]

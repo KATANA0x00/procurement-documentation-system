@@ -119,8 +119,8 @@
       </div>
 
       <DocInfo v-if="activePage === 'info-page'" v-model:data="data" />
-      <DocTable v-if="activePage === 'table-page'" v-model:data="data.doc_list" />
-      <DocAttch v-if="activePage === 'attach-page'" v-model:data="data.doc_file"
+      <DocTable v-if="activePage === 'table-page'" v-model:data="data.doc_list" v-model:summary="data.expenses_summary" v-model:isVAT="data.is_vat_included" />
+      <DocAttch v-if="activePage === 'attach-page'" v-model:data="data.doc_file" v-model:viewPDF="viewPDF"
         @removeFile="deletedFiles.push($event)" />
       <DocTrack v-if="activePage === 'track-page'" v-model:datas="data" v-model:docId="id" />
     </div>
@@ -162,9 +162,9 @@ const tabList = [
 ];
 
 const quickPDFList = [
-  {text: 'พ.1',docNeed: ['P01']},
-  {text: 'พ.1 + พจ.1',docNeed: ['P01','PJ1']},
-  {text: 'พ.1 + พ.43',docNeed: ['P01','P43']}
+  { text: 'พ.1', docNeed: ['P01'] },
+  { text: 'พ.1 + พจ.1', docNeed: ['P01', 'PJ1'] },
+  { text: 'พ.1 + พ.43', docNeed: ['P01', 'P43'] }
 ]
 
 const quickActionList = computed(() => [
@@ -280,7 +280,7 @@ async function uploadCSV(event) {
 }
 
 // ------------------- Document Action ------------------ //
-function actionDoc(status, stay=false) {
+async function actionDoc(status, stay = false) {
   const prevStatus = data.value.status;
   if (
     role === "" &&
@@ -295,32 +295,56 @@ function actionDoc(status, stay=false) {
     return;
   }
 
-  const response = $fetch(`/api/db/doc/${status}/${id}`, {
+  const response = await $fetch(`/api/db/doc/${status}/${id}`, {
     method: "POST",
     body: {
       userId: userInfo.value.id,
       datas: { ...data.value, department: userInfo.value.department_id },
     },
-  }).then((response) => {
-    if (uploadedFileMeta.value.length > 0) {
-      if (id === "new") {
-        uploadFiles(response.docid);
-      }
-      uploadFiles();
+  })
+  if (uploadedFileMeta.value.length > 0) {
+    if (id === "new") {
+      uploadFiles(response.docid);
     }
-  });
+    else { uploadFiles(); }
+  }
 
-  if(!stay){
+  
+  if (!stay) {
     navigateTo(`/auth/${role}`);
+  }
+  else {
+    return response.docid
+  }
+}
+
+async function viewPDF(fileElement) {
+  const docid = await actionDoc('save', true)
+  
+  pdfIsActive.value = false
+  PDFLoad.value = true
+  try {
+    const response = await $fetch(`/api/db/loadeddocument/${docid}`, {
+      method: 'POST',
+      body: fileElement,
+      responseType: 'arrayBuffer'
+    })
+
+    const blob = new Blob([response], { type: 'application/pdf' })
+    const url = URL.createObjectURL(blob)
+    window.open(url, '_blank')
+  } finally {
+    PDFLoad.value = false
   }
 }
 // ------------------- Document ------------------ //
 async function generatePDF(docNeed = ['P01', 'PJ1', 'P43', 'AFI']) {
-  actionDoc('save', true)
+  const docid = await actionDoc('save', true)
+  
   pdfIsActive.value = false
   PDFLoad.value = true
   try {
-    const response = await $fetch(`/api/docgenerator`, {
+    const response = await $fetch(`/api/docgenerator/${docid}`, {
       method: 'POST',
       body: { docNeed },
       responseType: 'arrayBuffer'
@@ -345,7 +369,6 @@ const data = ref(
     }
   )
 );
-
 // click outside logic
 const docRef = ref(null);
 const pdfRef = ref(null);

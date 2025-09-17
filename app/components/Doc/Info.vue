@@ -83,7 +83,7 @@ const data = defineModel("data");
 
 const doc_type = ["จัดซื้อ", "จัดจ้าง"];
 const doc_category = ["วัสดุการศึกษา"];
-const doc_money_source = ["งบประมาณ", "เงินรายได้"];
+const doc_money_source = ["งบประมาณ", "รายได้"];
 </script>
 
 <style scoped>

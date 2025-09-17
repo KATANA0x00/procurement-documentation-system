@@ -46,7 +46,9 @@ export default defineEventHandler(async event => {
       uid_expenses_subtype: { uid: '5104010000', text: 'ค่าวัสดุใช้ไป' },
       uid_expenses_minor: { uid: '5104010103', text: 'ค่าวัสดุการศึกษาใช้ไป' },
       doc_list: [],
-      doc_file: []
+      doc_file: [],
+      expenses_summary: 0,
+      is_vat_included: false
     }
   }
   const result = await client.query(
@@ -76,7 +78,9 @@ export default defineEventHandler(async event => {
       dc.uid_expenses_subtype,
       dc.uid_expenses_minor,
       dc.doc_list,
-      dc.doc_file
+      dc.doc_file,
+      dc.expenses_summary,
+      dc.is_vat_included
     FROM documents dc
     JOIN departments dp ON dc.department = dp.id
     JOIN users ON users.id = dp.procurementer

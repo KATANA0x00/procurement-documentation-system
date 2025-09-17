@@ -1,35 +1,28 @@
 <template>
   <div style="margin-top: 20px">
-    <div
-      v-if="datas.length === 0"
-      style="
+    <div v-if="datas.length === 0" style="
         text-align: center;
         color: var(--color-sub-dark);
         font-size: larger;
-      "
-    >
+      ">
       ไม่มีไฟล์แนบ
     </div>
-    <draggable
-      v-model="datas"
-      handle=".drag-handle"
-      item-key="id"
-      animation="200"
-    >
+    <draggable v-model="datas" handle=".drag-handle" item-key="id" animation="200">
       <template #item="{ element, index }">
         <div class="drag-handle">
-          <Icon
-            name="ic:twotone-menu"
-            style="color: var(--color-sub-dark); margin-right: 8px"
-          />
+          <Icon name="ic:twotone-menu" style="color: var(--color-sub-dark); margin-right: 8px" />
           <span>{{ element.name }}</span>
           <button @click="removeItem(index)">
-            <Icon
-              name="material-symbols:cancel-rounded"
-              size="1.5em"
-              style="color: var(--color-sub-dark)"
-            />
+            <Icon name="material-symbols:cancel-rounded" size="1.5em" style="color: var(--color-sub-dark)" />
           </button>
+          <button
+            style="position:absolute; right: 0; transform: translateX(150%);"
+            @click="viewPDF(element)"
+          >
+            <Icon name="gravity-ui:arrow-up-right-from-square" size="1.5rem"
+              style="color: var(--color-sub-dark);" />
+          </button>
+
         </div>
       </template>
     </draggable>
@@ -40,6 +33,13 @@
 import draggable from "vuedraggable";
 const datas = defineModel("data", { default: [] });
 const emit = defineEmits(["removeFile"])
+const props = defineProps({
+  viewPDF: {
+    type: Function,
+    required: true
+  }
+})
+
 function removeItem(idx) {
   const removed = datas.value[idx]
   if (removed && removed.file) {
