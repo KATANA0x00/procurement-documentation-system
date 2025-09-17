@@ -24,7 +24,7 @@ defineProps({
 <style scoped>
 .content {
   display: grid;
-  grid-template-columns: 1fr 6.5fr 2fr 2fr 1.5fr;
+  grid-template-columns: 1.5fr 6.5fr 2fr 2fr 2fr;
   cursor: pointer;
   border-radius: 8px;
   text-decoration: none;

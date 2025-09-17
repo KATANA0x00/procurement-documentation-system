@@ -36,17 +36,19 @@ export default defineEventHandler(async event => {
       no_tor: null,
       principal: result.rows[0].principal,
       procurementer_name: result.rows[0].procurementer,
-      uid_fund: { uid: '', text: '' },
-      uid_plan: { uid: '', text: '' },
-      uid_work_main: { uid: '', text: '' },
-      uid_work_sub: { uid: '', text: '' },
-      uid_work_minor: { uid: '', text: '' },
-      uid_expenses_category: { uid: '', text: '' },
-      uid_expenses_type: { uid: '', text: '' },
-      uid_expenses_subtype: { uid: '', text: '' },
-      uid_expenses_minor: { uid: '', text: '' },
+      uid_fund: { uid: '0200', text: 'เพื่อการศึกษา' },
+      uid_plan: { uid: '09007', text: 'จัดการศึกษาอุดมศึกษา' },
+      uid_work_main: { uid: '0102', text: 'งานจัดการศึกษาด้านวิทยาศาสตร์และเทคโนโลยี' },
+      uid_work_sub: { uid: '22', text: 'สาขาวิศวกรรมศาสตร์' },
+      uid_work_minor: { uid: '211', text: 'ระดับปริญญาตรี' },
+      uid_expenses_category: { uid: '52000', text: 'งบดำเนินงาน' },
+      uid_expenses_type: { uid: '52500', text: 'ค่าวัสดุ' },
+      uid_expenses_subtype: { uid: '5104010000', text: 'ค่าวัสดุใช้ไป' },
+      uid_expenses_minor: { uid: '5104010103', text: 'ค่าวัสดุการศึกษาใช้ไป' },
       doc_list: [],
-      doc_file: []
+      doc_file: [],
+      expenses_summary: 0,
+      is_vat_included: false
     }
   }
   const result = await client.query(
@@ -76,7 +78,9 @@ export default defineEventHandler(async event => {
       dc.uid_expenses_subtype,
       dc.uid_expenses_minor,
       dc.doc_list,
-      dc.doc_file
+      dc.doc_file,
+      dc.expenses_summary,
+      dc.is_vat_included
     FROM documents dc
     JOIN departments dp ON dc.department = dp.id
     JOIN users ON users.id = dp.procurementer

@@ -4,7 +4,7 @@ export default defineEventHandler(async event => {
   let {action, docid} = event.context.params
   const { userId, datas } = await readBody(event)
   const message = ''
-
+  
   const isLog = action != 'save'
 
   const client = connectPG()
@@ -38,7 +38,9 @@ export default defineEventHandler(async event => {
       uid_expenses_subtype,
       uid_expenses_minor,
       doc_list,
-      doc_file
+      doc_file,
+      expenses_summary,
+      is_vat_included
     ) VALUES (
       $1,
       $2,
@@ -63,7 +65,9 @@ export default defineEventHandler(async event => {
       $21,
       $22,
       $23,
-      $24
+      $24,
+      $25,
+      $26
     )
     RETURNING id;  
     ;
@@ -92,7 +96,9 @@ export default defineEventHandler(async event => {
         JSON.stringify(datas.uid_expenses_subtype),
         JSON.stringify(datas.uid_expenses_minor),
         JSON.stringify(datas.doc_list),
-        JSON.stringify(datas.doc_file ?? [])
+        JSON.stringify(datas.doc_file ?? []),
+        datas.expenses_summary,
+        datas.is_vat_included
       ]
     )
 
@@ -146,7 +152,9 @@ export default defineEventHandler(async event => {
       uid_expenses_subtype = $18,
       uid_expenses_minor = $19,
       doc_list = $20,
-      doc_file = $21
+      doc_file = $21,
+      expenses_summary = $25,
+      is_vat_included = $26
     WHERE
       id = $24
   `,
@@ -174,7 +182,9 @@ export default defineEventHandler(async event => {
         JSON.stringify(datas.doc_file ?? []),
         action,
         res.rows[0].no,
-        docid
+        docid,
+        datas.expenses_summary,
+        datas.is_vat_included
       ]
     )
   }
@@ -191,9 +201,5 @@ export default defineEventHandler(async event => {
 
   // all completed, return success
   client.end()
-  if (docid === 'new') {
-    return { action: 'success', docid: String(docid) }
-  } else {
-    return { action: 'success' }
-  }
+  return { action: 'success', docid: String(docid) }
 })

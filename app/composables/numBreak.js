@@ -1,4 +1,4 @@
-export function numBreak (inputNum) {
+export default function numBreak (inputNum) {
   const roundedNum = Number(inputNum)
   if (isNaN(roundedNum)) return 'Invalid number'
 

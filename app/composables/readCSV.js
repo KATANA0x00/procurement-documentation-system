@@ -31,7 +31,6 @@ export default function readCSV(file) {
 export function downloadTemplate() {
   // Define the CSV headers
   const headers = [
-    "ลำดับ",
     "รายการ",
     "จำนวน",
     "หน่วย",
@@ -40,7 +39,6 @@ export function downloadTemplate() {
   ];
 
   const exampleRow = [
-    "1",
     "ลบบรรทัดนี้ก่อนใช้งาน",
     "10",
     "ชิ้น",

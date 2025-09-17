@@ -52,13 +52,13 @@
       <span style="text-align: end" class="hightlight">ราคารวมรายการ</span>
       <span style="text-align: end; padding-right: 10px" class="hightlight">
         {{
-          numBreak  ((isVAT ? summarize() : summarize() - summarize() * 0.07).toFixed(2))
+          numBreak((isVAT ? summarize() : summarize() / 107 * 100).toFixed(2))
         }}
       </span>
       <span></span>
       <span style="text-align: end">รวมภาษีมูลค่าเพิ่ม 7%</span>
       <span style="text-align: end; padding-right: 10px">{{
-        numBreak((summarize() * 0.07).toFixed(2))
+        numBreak((summary * 7 / 107).toFixed(2))
       }}</span>
       <span></span>
       <span
@@ -74,7 +74,7 @@
         style="font-weight: 600; text-align: end; padding-right: 10px"
         class="hightlight"
         >{{
-          numBreak((isVAT ? summarize() + summarize() * 0.07 : summarize()).toFixed(2))
+          numBreak(summary)
         }}</span
       >
     </div>
@@ -82,9 +82,11 @@
 </template>
 
 <script setup>
+import { numBreak } from "#imports";
 import draggable from "vuedraggable";
-const isVAT = ref(false);
 const datas = defineModel("data", { default: [] });
+const isVAT = defineModel("isVAT", { default: false });
+const summary = defineModel("summary", { default: 0 });
 
 function summarize() {
   if (datas.value === null) {
@@ -116,6 +118,16 @@ watch(
   },
   { deep: true }
 );
+watch(
+  [datas, isVAT],
+  () => {
+    const base = datas.value.reduce((acc, item) => acc + item.total, 0)
+    const total = isVAT.value ? base + base * 0.07 : base
+    summary.value = total.toFixed(2)
+  },
+  { deep: true }
+)
+
 </script>
 
 <style scoped>

@@ -14,6 +14,7 @@
     "crypto-js": "^4.2.0",
     "ldapauth-fork": "^6.1.0",
     "nuxt": "^4.0.3",
+    "pdf-merger-js": "^5.1.2",
     "pdfmake": "^0.2.20",
     "pg": "^8.16.3",
     "vue": "^3.5.18",

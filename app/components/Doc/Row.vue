@@ -75,10 +75,18 @@ const emit = defineEmits(["remove"]);
 
   input {
     border: none;
+    border-bottom: transparent solid 1px;
     background-color: transparent;
     width: 90%;
     padding: 2px 0;
     border-radius: 2px;
+
+    transition: ease-in-out 0.1s;
+  }
+
+  input:hover {
+    border: none;
+    border-bottom: var(--color-orange) solid 1px;
   }
 
   input:focus {
