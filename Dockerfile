@@ -1,24 +1,30 @@
-# Stage 1: Build the app
+# Stage 1: Build Nuxt app
 FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
-# Copy source code and build
+# Copy source code
 COPY . .
-RUN npm run build
 
-# Stage 2: Production image
+# Build the Nuxt app
+RUN npx nuxi build
+
+# Stage 2: Production
 FROM node:20-alpine
 WORKDIR /app
 
-# Copy built app from builder
-COPY --from=builder /app/.output /app
+# Copy built output from builder
+COPY --from=builder /app/.output ./
+COPY --from=builder /app/package*.json ./
 
-# Expose port 3000
+# Install only production dependencies
+RUN npm ci --omit=dev
+
+# Expose port
 EXPOSE 3000
 
-# Start Nuxt in production mode
+# Start the Nuxt app
 CMD ["node", ".output/server/index.mjs"]
