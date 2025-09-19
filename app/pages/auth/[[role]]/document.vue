@@ -84,9 +84,7 @@
             pdfIsActive ? {} : { visibility: 'hidden', overflow: 'hidden' },
             data.status === 'done' ? { right: 0 } : { right: '200px' },
           ]">
-            <li v-for="item in quickPDFList" style="padding: 0;"><button @click="generatePDF(item.docNeed)">
-              {{ item.text}}
-            </button></li>
+            <li v-for="item in quickPDFList" @click="generatePDF(item.docNeed)">{{ item.text }}</li>
           </ul>
         </div>
         <Svgbutton v-for="(item, i) in quickActionList.filter((q) => q.isDisplay)" :key="i"
@@ -348,6 +346,31 @@ async function generatePDF(docNeed = ['P01', 'PJ1', 'P43', 'AFI']) {
   PDFLoad.value = true
 
   const pdfWindow = window.open('', '_blank')
+  pdfWindow.document.write(`
+    <html>
+      <head>
+        <title>Generating PDF...</title>
+        <style>
+          body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: sans-serif;
+            background: #f9f9f9;
+          }
+          h2 {
+            color: #555;
+          }
+        </style>
+      </head>
+      <body>
+        <h2>⏳ Please wait... generating your PDF</h2>
+      </body>
+    </html>
+  `)
+  pdfWindow.document.close()
+  
   try {
     const res = await $fetch.raw(`/api/docgenerator/${docid}`, {
       method: 'POST',
@@ -443,21 +466,6 @@ onBeforeUnmount(() => {
         background-color: var(--color-sub-light);
         cursor: pointer;
         opacity: 1;
-
-        button {
-          width: 100%;
-          margin: 0;
-          padding: 8px 20px;
-          border: none;
-          background-color: var(--color-sub-light);
-          cursor: pointer;
-          text-align: left;
-        }
-
-        button:hover {
-          background-color: var(--color-theme);
-          color: var(--color-orange);
-        }
       }
 
       li:hover {
