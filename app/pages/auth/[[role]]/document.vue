@@ -346,6 +346,8 @@ async function generatePDF(docNeed = ['P01', 'PJ1', 'P43', 'AFI']) {
 
   pdfIsActive.value = false
   PDFLoad.value = true
+
+  const pdfWindow = window.open('', '_blank')
   try {
     const res = await $fetch.raw(`/api/docgenerator/${docid}`, {
       method: 'POST',
@@ -355,8 +357,7 @@ async function generatePDF(docNeed = ['P01', 'PJ1', 'P43', 'AFI']) {
     const blob = new Blob([res._data], { type: 'application/pdf' })
     const url = URL.createObjectURL(blob)
 
-    const newTab = window.open('', '_blank')
-    newTab.location.href = url
+    pdfWindow.location.href = url
   } finally {
     PDFLoad.value = false
   }
