@@ -20,10 +20,9 @@ export default defineEventHandler(async event => {
   )
 
   let ldapUser = null
-
+  const username = email.split('@')[0]
   // LDAP authentication
   if (!isBypass) {
-    const username = email.split('@')[0]
     const ldapAuth = connectLDAP()
     try {
       const ldapUser = await new Promise((resolve, reject) => {
