@@ -1,30 +1,29 @@
-# Stage 1: Build Nuxt app
-FROM node:20-alpine AS builder
+# Stage 1: Build
+FROM node:22-alpine AS build
 WORKDIR /app
+
+RUN corepack enable
+
+# Copy only package files first
+COPY package.json package-lock.json ./
 
 # Install dependencies
-COPY package*.json ./
 RUN npm ci
 
-# Copy source code
-COPY . .
+# Copy the whole project
+COPY . ./
 
-# Build the Nuxt app
-RUN npx nuxi build
+# Build
+RUN npm run build
 
-# Stage 2: Production
-FROM node:20-alpine
+# Stage 2: Runtime
+FROM node:22-alpine
 WORKDIR /app
 
-# Copy built output from builder
-COPY --from=builder /app/.output ./
-COPY --from=builder /app/package*.json ./
+# Copy only build output
+COPY --from=build /app/.output ./.output
 
-# Install only production dependencies
-RUN npm ci --omit=dev
+# Copy fonts (keep public/fonts for runtime)
+COPY --from=build /app/public ./public
 
-# Expose port
-EXPOSE 3000
-
-# Start the Nuxt app
 CMD ["node", ".output/server/index.mjs"]

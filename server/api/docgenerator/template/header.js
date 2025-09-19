@@ -1,7 +1,7 @@
 import path from 'path'
 import fs from 'fs'
 
-const docLogoRaw = path.resolve('./app/assets/doc_logo.png')
+const docLogoRaw = path.resolve(process.cwd(), 'public/doc_logo.png')
 const docLogo = fs.readFileSync(docLogoRaw).toString('base64')
 
 export function header (data, idselect, Header, docmark = '') {

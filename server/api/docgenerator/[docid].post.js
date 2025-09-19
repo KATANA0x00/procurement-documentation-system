@@ -10,12 +10,12 @@ import { connectPG } from '../connection'
 
 const fonts = {
   Sarabun: {
-    normal: path.resolve('./app/assets/fonts/Sarabun-light.ttf'),
-    bold: path.resolve('./app/assets/fonts/Sarabun-SemiBold.ttf'),
-    italics: path.resolve('./app/assets/fonts/Sarabun-Italic.ttf'),
-    bolditalics: path.resolve('./app/assets/fonts/Sarabun-BoldItalic.ttf')
+    normal: path.join(process.cwd(), 'public/fonts/light.ttf'),
+    bold: path.join(process.cwd(), 'public/fonts/semibold.ttf'),
+    italics: path.join(process.cwd(), 'public/fonts/italic.ttf'),
+    bolditalics: path.join(process.cwd(), 'public/fonts/bolditalic.ttf')
   }
-}
+};
 
 const printer = new PdfPrinter(fonts)
 
