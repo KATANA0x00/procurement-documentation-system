@@ -27,4 +27,3 @@ COPY --from=build /app/.output ./.output
 COPY --from=build /app/public ./public
 
 CMD ["node", ".output/server/index.mjs"]
-
