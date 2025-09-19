@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  tofa-deployment:
+  docker-build:
     runs-on: ubuntu-latest
     steps:
       # 1. Checkout repo
@@ -28,12 +28,14 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 5. Build and push Docker image (multi-arch)
+      # 5. Build and push Docker image (multi-arch with caching)
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./Dockerfile
           push: true
           platforms: linux/amd64,linux/arm64
           tags: shoyuu/procurement-documentation-system:latest
-          file: ./Dockerfile
+          cache-from: type=registry,ref=shoyuu/procurement-documentation-system:buildcache
+          cache-to: type=registry,ref=shoyuu/procurement-documentation-system:buildcache,mode=max
