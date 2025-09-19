@@ -73,7 +73,7 @@ export default defineEventHandler(async event => {
 
   setCookie(event, 'ProcurementAuth', sessionId, {
     httpOnly: true,
-    secure: config.ON_PRODUCTION,
+    secure: process.env.ON_PRODUCTION,
     sameSite: 'strict',
     maxAge: 60 * 60 * 24 * 7,
     path: '/'

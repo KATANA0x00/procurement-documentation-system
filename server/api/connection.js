@@ -1,14 +1,9 @@
 import LdapAuth from 'ldapauth-fork'
 import { Client } from 'pg'
 
-const config = useRuntimeConfig()
-
 export function connectLDAP () {
   const ldapUrl = process.env.NUXT_LDAP_URL
   const ldapDC = process.env.NUXT_LDAP_DC
-
-  console.log('NUXT_LDAP_URL', ldapUrl)
-  console.log('NUXT_LDAP_DC', ldapDC)
 
   if (!ldapUrl || !ldapDC) {
     throw new Error('LDAP configuration is missing')
@@ -27,25 +22,26 @@ export function connectLDAP () {
 }
 
 export function connectPG () {
-  console.log('NUXT_PG_USER', config.NUXT_PG_USER)
-  console.log('NUXT_PG_HOST', config.NUXT_PG_HOST)
-  console.log('NUXT_PG_BASE', config.NUXT_PG_BASE)
-  console.log('NUXT_PG_PASS', config.NUXT_PG_PASS)
+  const pg_user = process.env.NUXT_PG_USER
+  const pg_host = process.env.NUXT_PG_HOST
+  const pg_base = process.env.NUXT_PG_BASE
+  const pg_pass = process.env.NUXT_PG_PASS
+
   if (
-    config.NUXT_PG_USER === '' ||
-    config.NUXT_PG_HOST === '' ||
-    config.NUXT_PG_BASE === '' ||
-    config.NUXT_PG_PASS === ''
+    pg_user === '' ||
+    pg_host === '' ||
+    pg_base === '' ||
+    pg_pass === ''
   ) {
     throw new Error('PostgreSQL configuration is missing')
   }
 
   const client = new Client({
-    user: config.NUXT_PG_USER,
-    host: config.NUXT_PG_HOST,
-    database: config.NUXT_PG_BASE,
-    password: config.NUXT_PG_PASS,
-    port: config.NUXT_NUXT_PG_PORT
+    user: pg_user,
+    host: pg_host,
+    database: pg_base,
+    password: pg_pass,
+    port: process.env.NUXT_NUXT_PG_PORT
   })
 
   return client
