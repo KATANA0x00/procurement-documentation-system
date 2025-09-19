@@ -2,7 +2,6 @@ import { connectPG } from '../connection'
 
 export default defineEventHandler(async event => {
   const sessionId = parseCookies(event).ProcurementAuth
-  console.log("sessionId :", sessionId )
   if (!sessionId) {
     throw createError({
       statusCode: 401,
