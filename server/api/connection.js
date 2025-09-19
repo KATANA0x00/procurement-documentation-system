@@ -4,7 +4,8 @@ import { Client } from 'pg'
 const config = useRuntimeConfig()
 
 export function connectLDAP() {
-
+    console.log('NUXT_LDAP_URL', config.NUXT_LDAP_URL)
+    console.log('NUXT_LDAP_DC', config.NUXT_LDAP_DC)
     if (config.NUXT_LDAP_URL === '' || config.NUXT_LDAP_DC === '' ) {
         throw new Error('LDAP configuration is missing');
     }
@@ -23,7 +24,10 @@ export function connectLDAP() {
 }
 
 export function connectPG() {
-
+    console.log('NUXT_PG_USER', config.NUXT_PG_USER)
+    console.log('NUXT_PG_HOST', config.NUXT_PG_HOST)
+    console.log('NUXT_PG_BASE', config.NUXT_PG_BASE)
+    console.log('NUXT_PG_PASS', config.NUXT_PG_PASS)
     if (config.NUXT_PG_USER === '' || config.NUXT_PG_HOST === '' || config.NUXT_PG_BASE === '' || config.NUXT_PG_PASS === '') {
         throw new Error('PostgreSQL configuration is missing');
     }
