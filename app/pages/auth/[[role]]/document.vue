@@ -84,7 +84,9 @@
             pdfIsActive ? {} : { visibility: 'hidden', overflow: 'hidden' },
             data.status === 'done' ? { right: 0 } : { right: '200px' },
           ]">
-            <li v-for="item in quickPDFList" @click="generatePDF(item.docNeed)">{{ item.text }}</li>
+            <li v-for="item in quickPDFList" style="padding: 0;"><button @click="generatePDF(item.docNeed)">
+              {{ item.text}}
+            </button></li>
           </ul>
         </div>
         <Svgbutton v-for="(item, i) in quickActionList.filter((q) => q.isDisplay)" :key="i"
@@ -119,7 +121,8 @@
       </div>
 
       <DocInfo v-if="activePage === 'info-page'" v-model:data="data" />
-      <DocTable v-if="activePage === 'table-page'" v-model:data="data.doc_list" v-model:summary="data.expenses_summary" v-model:isVAT="data.is_vat_included" />
+      <DocTable v-if="activePage === 'table-page'" v-model:data="data.doc_list" v-model:summary="data.expenses_summary"
+        v-model:isVAT="data.is_vat_included" />
       <DocAttch v-if="activePage === 'attach-page'" v-model:data="data.doc_file" v-model:viewPDF="viewPDF"
         @removeFile="deletedFiles.push($event)" />
       <DocTrack v-if="activePage === 'track-page'" v-model:datas="data" v-model:docId="id" />
@@ -309,7 +312,7 @@ async function actionDoc(status, stay = false) {
     else { uploadFiles(); }
   }
 
-  
+
   if (!stay) {
     navigateTo(`/auth/${role}`);
   }
@@ -320,7 +323,7 @@ async function actionDoc(status, stay = false) {
 
 async function viewPDF(fileElement) {
   const docid = await actionDoc('save', true)
-  
+
   pdfIsActive.value = false
   PDFLoad.value = true
   try {
@@ -340,7 +343,7 @@ async function viewPDF(fileElement) {
 // ------------------- Document ------------------ //
 async function generatePDF(docNeed = ['P01', 'PJ1', 'P43', 'AFI']) {
   const docid = await actionDoc('save', true)
-  
+
   pdfIsActive.value = false
   PDFLoad.value = true
   try {
@@ -439,6 +442,21 @@ onBeforeUnmount(() => {
         background-color: var(--color-sub-light);
         cursor: pointer;
         opacity: 1;
+
+        button {
+          width: 100%;
+          margin: 0;
+          padding: 8px 20px;
+          border: none;
+          background-color: var(--color-sub-light);
+          cursor: pointer;
+          text-align: left;
+        }
+
+        button:hover {
+          background-color: var(--color-theme);
+          color: var(--color-orange);
+        }
       }
 
       li:hover {
