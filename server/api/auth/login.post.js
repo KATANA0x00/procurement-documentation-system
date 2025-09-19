@@ -11,41 +11,42 @@ export default defineEventHandler(async event => {
     })
   }
 
-  // const bypassUser = [
-  //     {
-  //     usr: 'admin.test@dev',
-  //     psw: '12345678',
-  //     },
-  //     {
-  //     usr: 'request.test@dev',
-  //     psw: '12345678',
-  //     },
-  // ]
+  const bypassUser = [
+    { usr: 'admin.test@dev', psw: '12345678' },
+    { usr: 'user.test@dev', psw: '12345678' }
+  ]
+  const isBypass = bypassUser.some(
+    user => user.usr === email && user.psw === password
+  )
+
+  let ldapUser = null
 
   // LDAP authentication
-  const username = email.split('@')[0]
-  const ldapAuth = connectLDAP()
-  try {
-    const ldapUser = await new Promise((resolve, reject) => {
-      ldapAuth.on('error', err => {
-        reject(new Error('Internal Server Error: ' + err.message))
-      })
+  if (!isBypass) {
+    const username = email.split('@')[0]
+    const ldapAuth = connectLDAP()
+    try {
+      const ldapUser = await new Promise((resolve, reject) => {
+        ldapAuth.on('error', err => {
+          reject(new Error('Internal Server Error: ' + err.message))
+        })
 
-      ldapAuth.authenticate(email, password, (err, user) => {
-        if (err) {
-          reject(new Error('Email or password is incorrect'))
-        } else {
-          resolve(user)
-        }
+        ldapAuth.authenticate(email, password, (err, user) => {
+          if (err) {
+            reject(new Error('Email or password is incorrect'))
+          } else {
+            resolve(user)
+          }
+        })
       })
-    })
-  } catch (e) {
-    return {
-      isAuth: false,
-      message: e instanceof Error ? e.message : String(e)
+    } catch (e) {
+      return {
+        isAuth: false,
+        message: e instanceof Error ? e.message : String(e)
+      }
+    } finally {
+      await ldapAuth.close()
     }
-  } finally {
-    await ldapAuth.close()
   }
 
   const sessionId = encryptData({
@@ -73,9 +74,9 @@ export default defineEventHandler(async event => {
 
   setCookie(event, 'ProcurementAuth', sessionId, {
     httpOnly: true,
-    secure: process.env.ON_PRODUCTION === 'true',      // only true in HTTPS production
-    sameSite: process.env.ON_PRODUCTION === 'true' ? 'strict' : 'lax', // lax in dev
-    maxAge: 60 * 60 * 24 * 7,                         // 7 days
+    secure: process.env.ON_PRODUCTION === 'true',
+    sameSite: process.env.ON_PRODUCTION === 'true' ? 'strict' : 'lax',
+    maxAge: 60 * 60 * 24 * 7,
     path: '/'
   })
 
