@@ -117,7 +117,7 @@
           </ul>
         </div>
       </div>
-
+      {{ deletedFiles }}
       <DocInfo v-if="activePage === 'info-page'" v-model:data="data" />
       <DocTable v-if="activePage === 'table-page'" v-model:data="data.doc_list" v-model:summary="data.expenses_summary"
         v-model:isVAT="data.is_vat_included" />
@@ -251,14 +251,13 @@ const uploadFiles = async (docid = id) => {
       console.error("Upload failed:", err)
     }
   }
-
   // --- Step 2: Delete removed files ---
   try {
     const res = await fetch(`/api/db/doc/delete/${docid}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        files: deletedFiles.value, // you need to track these
+        files: deletedFiles.value,
       }),
     })
     if (!res.ok) throw new Error(`Delete failed with status ${res.status}`)
@@ -288,12 +287,12 @@ async function actionDoc(status, stay = false) {
     ["waiting", "approve", "signed", "done"].includes(prevStatus)
   ) {
     alert("ไม่สามารถดำเนินการกับเอกสารในสถานะนี้ได้");
-    return;
+    return false;
   }
 
   if (role === "admin" && prevStatus === "edit") {
     alert("ไม่สามารถดำเนินการกับเอกสารในสถานะนี้ได้");
-    return;
+    return false;
   }
 
   const response = await $fetch(`/api/db/doc/${status}/${id}`, {
@@ -303,7 +302,7 @@ async function actionDoc(status, stay = false) {
       datas: { ...data.value, department: userInfo.value.department_id },
     },
   })
-  if (uploadedFileMeta.value.length > 0) {
+  if (uploadedFileMeta.value.length > 0 || deletedFiles.value.length > 0) {
     if (id === "new") {
       uploadFiles(response.docid);
     }
@@ -321,27 +320,7 @@ async function actionDoc(status, stay = false) {
 
 async function viewPDF(fileElement) {
   const docid = await actionDoc('save', true)
-
-  pdfIsActive.value = false
-  PDFLoad.value = true
-  try {
-    const response = await $fetch(`/api/db/loadeddocument/${docid}`, {
-      method: 'POST',
-      body: fileElement,
-      responseType: 'arrayBuffer'
-    })
-
-    const blob = new Blob([response], { type: 'application/pdf' })
-    const url = URL.createObjectURL(blob)
-    window.open(url, '_blank')
-  } finally {
-    PDFLoad.value = false
-  }
-}
-// ------------------- Document ------------------ //
-async function generatePDF(docNeed = ['P01', 'PJ1', 'P43', 'AFI']) {
-  const docid = await actionDoc('save', true)
-
+  if(!docid){ return; }
   pdfIsActive.value = false
   PDFLoad.value = true
 
@@ -355,7 +334,7 @@ async function generatePDF(docNeed = ['P01', 'PJ1', 'P43', 'AFI']) {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 80vh;
             font-family: sans-serif;
             background: #f9f9f9;
           }
@@ -370,7 +349,55 @@ async function generatePDF(docNeed = ['P01', 'PJ1', 'P43', 'AFI']) {
     </html>
   `)
   pdfWindow.document.close()
-  
+
+  try {
+    const response = await $fetch(`/api/db/loadeddocument/${docid}`, {
+      method: 'POST',
+      body: fileElement,
+      responseType: 'arrayBuffer'
+    })
+
+    const blob = new Blob([response], { type: 'application/pdf' })
+    const url = URL.createObjectURL(blob)
+
+    pdfWindow.location.href = url
+  } finally {
+    PDFLoad.value = false
+  }
+}
+// ------------------- Document ------------------ //
+async function generatePDF(docNeed = ['P01', 'PJ1', 'P43', 'AFI']) {
+  const docid = await actionDoc('save', true)
+  if(!docid){ return; }
+  pdfIsActive.value = false
+  PDFLoad.value = true
+
+  const pdfWindow = window.open('', '_blank')
+  pdfWindow.document.write(`
+    <html>
+      <head>
+        <title>Generating PDF...</title>
+        <style>
+          body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 80vh;
+            font-family: sans-serif;
+            background: #f9f9f9;
+          }
+          h2 {
+            color: #555;
+          }
+        </style>
+      </head>
+      <body>
+        <h2>⏳ Please wait... generating your PDF</h2>
+      </body>
+    </html>
+  `)
+  pdfWindow.document.close()
+
   try {
     const res = await $fetch.raw(`/api/docgenerator/${docid}`, {
       method: 'POST',
