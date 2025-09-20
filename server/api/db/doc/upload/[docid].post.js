@@ -2,8 +2,7 @@ import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 
 export default defineEventHandler(async event => {
-  const config = useRuntimeConfig()
-  const uploadRoot = config.NUXT_UPLOAD_DIR || 'uploads'
+  const uploadRoot = process.env.NUXT_UPLOAD_DIR || 'uploads'
 
   const { docid } = event.context.params
   if (!docid) {

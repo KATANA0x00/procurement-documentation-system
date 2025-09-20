@@ -2,7 +2,6 @@ import { connectLDAP, connectPG } from '../connection'
 import { encryptData } from '~~/server/api/crypto'
 
 export default defineEventHandler(async event => {
-  const config = useRuntimeConfig()
   const { email, password } = await readBody(event)
   if (!email || !password) {
     throw createError({
