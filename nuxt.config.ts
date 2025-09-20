@@ -14,5 +14,9 @@ export default defineNuxtConfig({
     NUXT_NUXT_PG_PORT: Number(process.env.NUXT_NUXT_PG_PORT) || 5432,
 
     ON_PRODUCTION: process.env.ON_PRODUCTION,
+
+    public: {
+      dateNow: process.env.NUXT_DATE_NOW
+    }
   }
 })

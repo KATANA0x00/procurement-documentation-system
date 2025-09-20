@@ -117,7 +117,6 @@
           </ul>
         </div>
       </div>
-      {{ deletedFiles }}
       <DocInfo v-if="activePage === 'info-page'" v-model:data="data" />
       <DocTable v-if="activePage === 'table-page'" v-model:data="data.doc_list" v-model:summary="data.expenses_summary"
         v-model:isVAT="data.is_vat_included" />

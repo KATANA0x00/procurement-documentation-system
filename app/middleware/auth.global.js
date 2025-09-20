@@ -1,5 +1,7 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  if (to.path.startsWith('/api')) return
+  if (to.path.startsWith('/api') || to.path === '/version') {
+    return
+  }
   const sessionId = useCookie('ProcurementAuth').value
   if (sessionId === null) {
     if (to.path !== '/login') {
