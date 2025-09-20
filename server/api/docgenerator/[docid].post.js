@@ -6,6 +6,9 @@ import PDFMerger from 'pdf-merger-js'
 import { docDefinition_P01 } from './template/P01'
 import { docDefinition_PJ1 } from './template/PJ1'
 
+import { docDefinition_PM1 } from './template/PM1'
+import { docDefinition_PM2 } from './template/PM2'
+
 import { connectPG } from '../connection'
 
 const fonts = {
@@ -22,7 +25,9 @@ const printer = new PdfPrinter(fonts)
 async function buildDoc (key, data) {
   const Definition = {
     P01: docDefinition_P01,
-    PJ1: docDefinition_PJ1
+    PJ1: docDefinition_PJ1,
+    PM1: docDefinition_PM1,
+    PM2: docDefinition_PM2
   }
   if (!Definition[key]) return null
 
@@ -84,9 +89,12 @@ export default defineEventHandler(async event => {
         dc.doc_list,
         dc.expenses_summary,
         dc.doc_file,
-        dc.is_vat_included
+        dc.is_vat_included,
+        pm.type AS pm_type,
+        pm.list AS pm_list
       FROM documents dc
       JOIN departments dp ON dc.department = dp.id
+      JOIN paymentation pm ON dc.id = pm.doc_id
       WHERE dc.id = $1
     `,
     [docid]
