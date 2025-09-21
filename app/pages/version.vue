@@ -14,7 +14,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
 const lastDeploy = ref(null);
 
 onMounted(() => {
@@ -44,6 +43,3 @@ onMounted(() => {
   }
 }
 </style>
-
-{ "name":"บริษัท จีเจ เทค จำกัด (สำนักงานใหญ่)", "book":"00012",
-"number":"2568/09-0015", "amount_b":5424, "amount_s":90 }
