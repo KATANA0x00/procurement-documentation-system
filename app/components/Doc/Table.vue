@@ -65,7 +65,7 @@
             <span
               style="color: var(--color-orange)"
               :style="
-                isVAT
+                !isVAT
                   ? {
                       textDecoration: 'none',
                       textDecorationThickness: undefined,

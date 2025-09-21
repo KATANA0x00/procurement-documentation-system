@@ -444,7 +444,8 @@ async function actionDoc(status, stay = false) {
   const prevStatus = data.value.status;
   if (
     role === "" &&
-    ["waiting", "approve", "signed", "done"].includes(prevStatus)
+    ["waiting", "approve", "signed", "done"].includes(prevStatus) &&
+    !stay
   ) {
     alert("ไม่สามารถดำเนินการกับเอกสารในสถานะนี้ได้");
     return false;

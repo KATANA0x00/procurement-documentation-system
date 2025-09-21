@@ -56,7 +56,7 @@ export default defineEventHandler(async event => {
   FROM new_doc
   RETURNING id AS payment_id
 )
-SELECT id AS document_id
+SELECT id
 FROM new_doc;
   `,
       [
@@ -90,8 +90,9 @@ FROM new_doc;
         JSON.stringify(dataPayment.list)
       ]
     )
-
     docid = result.rows[0].id
+    console.log(docid)
+
   } else {
     const res = await client.query(
       `
