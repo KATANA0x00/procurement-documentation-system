@@ -19,7 +19,7 @@ const fonts = {
     italics: path.join(process.cwd(), 'public/fonts/italic.ttf'),
     bolditalics: path.join(process.cwd(), 'public/fonts/bolditalic.ttf')
   }
-};
+}
 
 const printer = new PdfPrinter(fonts)
 
@@ -58,7 +58,7 @@ async function buildDoc (key, data) {
 }
 
 export default defineEventHandler(async event => {
-  const { docNeed } = await readBody(event)
+  let { docNeed } = await readBody(event)
   const { docid } = await event.context.params
 
   const client = connectPG()
@@ -102,6 +102,16 @@ export default defineEventHandler(async event => {
     [docid]
   )
   client.end()
+
+  if (docNeed.includes('PM')) {
+    const pmType = result.rows[0].pm_type
+
+    if (pmType === 'personal') {
+      docNeed = docNeed.map(d => (d === 'PM' ? 'PM1' : d))
+    } else if (pmType === 'commercial') {
+      docNeed = docNeed.map(d => (d === 'PM' ? 'PM2' : d))
+    }
+  }
 
   const merger = new PDFMerger()
 

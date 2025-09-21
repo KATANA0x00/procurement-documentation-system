@@ -14,11 +14,11 @@ export default function readCSV(file) {
 
       // map rows into objects
       const data = rows.map((row) => ({
-        qty: Number(row[2]) || 0,       // จำนวน
-        name: row[1] || "",             // รายการ
-        unit: row[3] || "",             // หน่วย
-        price: Number(row[4]) || 0,     // ราคา/หน่วย
-        total: Number(row[5]) || 0      // ราคารวม
+        qty: Number(row[1]) || 0,       // จำนวน
+        name: row[0] || "",             // รายการ
+        unit: row[2] || "",             // หน่วย
+        price: Number(row[3]) || 0,     // ราคา/หน่วย
+        total: Number(row[4]) || 0      // ราคารวม
       }));
 
       resolve(data);

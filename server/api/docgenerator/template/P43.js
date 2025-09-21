@@ -1,8 +1,9 @@
+import numBreak from '~/composables/numBreak'
 import { sign43, sign432, sign433 } from './sign'
 
 function getMaxRows(len) {
-    const base = 8
-    const steps = [14, 4, 17, 12]
+    const base = 9
+    const steps = [13, 2, 9, 13]
 
     let current = base
     let i = 0
@@ -58,11 +59,12 @@ export function docDefinition_P43(data) {
                             text:
                                 'ด้วย ' +
                                 data.doc_requester +
-                                'มีความประสงค์ขอเบิกพัสดุตามรายการ และจำนวน' +
-                                ' 2 รายการ' +
-                                'เพื่อ' +
+                                'มีความประสงค์ขอเบิกพัสดุตามรายการ และจำนวน ' +
+                                data.doc_list.length +
+                                ' รายการ' +
+                                ' เพื่อ' +
                                 data.doc_reason +
-                                ' และต้องการใช้สิ่งของตามใบเบิกนี้ ภายในวันที่ ' +
+                                ' และต้องการใช้สิ่งของตามใบเบิกนี้\nภายในวันที่ ' +
                                 '.'.repeat(15) +
                                 'เดือน' +
                                 '.'.repeat(25) +
@@ -85,7 +87,7 @@ export function docDefinition_P43(data) {
         {
             table: {
                 headerRow: 2,
-                widths: [35, '*', 25, 25, 18, 40, 55, 55, 25],
+                widths: [24, '*', 28, 28, 18, 38, 55, 55, 25],
                 body: [
                     [
                         {
@@ -127,28 +129,17 @@ export function docDefinition_P43(data) {
                         { text: 'จำนวนเงิน', bold: true, alignment: 'center' },
                         {}
                     ],
-                    [
-                        { text: '1.', alignment: 'center' },
-                        { text: 'บอร์ดไมโครคอนโทรลเลอร์ รุ่น Arduino MEGA 2560 R3', alignment: 'left' },
-                        { text: '6 อัน', alignment: 'center' },
-                        { text: '6 อัน', alignment: 'center' },
+                    ...data.doc_list.map((item, index) => [
+                        { text: index+1+'.', alignment: 'center' },
+                        { text: item.name, alignment: 'left' },
+                        { text: item.qty + ' ' + item.unit, alignment: 'center' },
+                        { text: item.qty + ' ' + item.unit, alignment: 'center' },
                         {},
                         {},
                         {},
                         {},
                         {}
-                    ],
-                    [
-                        { text: '2.', alignment: 'center' },
-                        { text: 'บอร์ดไมโครคอนโทรลเลอร์ รุ่น Arduino MEGA 2560 R3', alignment: 'left' },
-                        { text: '6 อัน', alignment: 'center' },
-                        { text: '6 อัน', alignment: 'center' },
-                        {},
-                        {},
-                        {},
-                        {},
-                        {}
-                    ],
+                    ]),
                     ...paddedRows,
                     [
                         { text: ' ', alignment: 'center', colSpan: 5 },
@@ -163,8 +154,8 @@ export function docDefinition_P43(data) {
                             border: [false, false, false, false]
                         },
                         {},
+                        {text: numBreak(data.expenses_summary), alignment: 'right'},
                         {},
-                        {}
                     ]
                 ]
             }
