@@ -16,7 +16,7 @@ export default defineNuxtConfig({
     ON_PRODUCTION: process.env.ON_PRODUCTION,
 
     public: {
-      NUXT_DATE_NOW: process.env.NUXT_DATE_NOW
+      dateDeploy: process.env.NUXT_PUBLIC_DATE_NOW
     }
   },
 

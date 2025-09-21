@@ -20,7 +20,7 @@ definePageMeta({
     layout: 'empty'
 })
 const config = useRuntimeConfig()
-const lastDeploy = ref(import.meta.env.NUXT_DATE_NOW || process.env.NUXT_DATE_NOW || config.public.NUXT_DATE_NOW)
+const lastDeploy = ref(import.meta.env.NUXT_PUBLIC_DATE_NOW || process.env.NUXT_PUBLIC_DATE_NOW || config.public.dateDeploy)
 </script>
 
 <style>

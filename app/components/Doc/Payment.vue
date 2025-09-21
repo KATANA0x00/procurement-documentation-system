@@ -69,7 +69,15 @@
           <span> บาท</span>
         </div>
       </div>
-
+      <div class="drag-header">
+        <span></span>
+        <span></span>
+        <span style="text-align: left;">ชื่อบริษัท ห้างหุ้นส่วน ร้านค้า</span>
+        <span>เล่มที่</span>
+        <span>เลขที่</span>
+        <span style="text-align: right;margin-right: 30px;">บาท</span>
+        <span style="text-align: right;">สตางค์</span>
+      </div>
       <draggable
         v-model="dataPayment.list"
         handle=".drag-handle"
@@ -164,6 +172,17 @@ function deleteRow(index) {
 
   &:hover {
     background-color: var(--color-sub-mid);
+  }
+}
+
+.drag-header {
+  display: grid;
+  grid-template-columns: 0.8fr 0.5fr 10fr 2fr 3fr 3fr 1fr;
+  padding: 5px 0;
+  margin:  0 50px 0 15px;
+  span {
+    color: var(--color-sub-dark);
+    text-align: center;
   }
 }
 
