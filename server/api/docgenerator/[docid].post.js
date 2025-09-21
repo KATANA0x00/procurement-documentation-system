@@ -5,6 +5,7 @@ import PDFMerger from 'pdf-merger-js'
 
 import { docDefinition_P01 } from './template/P01'
 import { docDefinition_PJ1 } from './template/PJ1'
+import { docDefinition_P43 } from './template/P43'
 
 import { docDefinition_PM1 } from './template/PM1'
 import { docDefinition_PM2 } from './template/PM2'
@@ -26,6 +27,7 @@ async function buildDoc (key, data) {
   const Definition = {
     P01: docDefinition_P01,
     PJ1: docDefinition_PJ1,
+    P43: docDefinition_P43,
     PM1: docDefinition_PM1,
     PM2: docDefinition_PM2
   }
