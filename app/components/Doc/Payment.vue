@@ -128,7 +128,7 @@
 <script setup>
 import draggable from "vuedraggable";
 const dataPayment = defineModel("dataPayment");
-console.log(dataPayment.value);
+
 const type_enum = [
   {
     text: "คืนเงินบริษัท",
