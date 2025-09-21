@@ -45,14 +45,19 @@ export default defineEventHandler(async event => {
           $19, $20, $21, $22, $23, $24, $25, $26
       )
       RETURNING id
-    )
-    INSERT INTO paymentation (
-      type,
-      list,
-      doc_id
-    )
-    SELECT $27, $28, id
-    FROM new_doc;
+    ),
+    ins_payment AS (
+  INSERT INTO paymentation (
+    type,
+    list,
+    doc_id
+  )
+  SELECT $27, $28, id
+  FROM new_doc
+  RETURNING id AS payment_id
+)
+SELECT id AS document_id
+FROM new_doc;
   `,
       [
         datas.department,
