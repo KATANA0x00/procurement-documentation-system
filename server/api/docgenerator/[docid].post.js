@@ -5,6 +5,10 @@ import PDFMerger from 'pdf-merger-js'
 
 import { docDefinition_P01 } from './template/P01'
 import { docDefinition_PJ1 } from './template/PJ1'
+import { docDefinition_P43 } from './template/P43'
+
+import { docDefinition_PM1 } from './template/PM1'
+import { docDefinition_PM2 } from './template/PM2'
 
 import { connectPG } from '../connection'
 
@@ -15,14 +19,17 @@ const fonts = {
     italics: path.join(process.cwd(), 'public/fonts/italic.ttf'),
     bolditalics: path.join(process.cwd(), 'public/fonts/bolditalic.ttf')
   }
-};
+}
 
 const printer = new PdfPrinter(fonts)
 
 async function buildDoc (key, data) {
   const Definition = {
     P01: docDefinition_P01,
-    PJ1: docDefinition_PJ1
+    PJ1: docDefinition_PJ1,
+    P43: docDefinition_P43,
+    PM1: docDefinition_PM1,
+    PM2: docDefinition_PM2
   }
   if (!Definition[key]) return null
 
@@ -51,7 +58,7 @@ async function buildDoc (key, data) {
 }
 
 export default defineEventHandler(async event => {
-  const { docNeed } = await readBody(event)
+  let { docNeed } = await readBody(event)
   const { docid } = await event.context.params
 
   const client = connectPG()
@@ -84,14 +91,27 @@ export default defineEventHandler(async event => {
         dc.doc_list,
         dc.expenses_summary,
         dc.doc_file,
-        dc.is_vat_included
+        dc.is_vat_included,
+        pm.type AS pm_type,
+        pm.list AS pm_list
       FROM documents dc
       JOIN departments dp ON dc.department = dp.id
+      JOIN paymentation pm ON dc.id = pm.doc_id
       WHERE dc.id = $1
     `,
     [docid]
   )
   client.end()
+
+  if (docNeed.includes('PM')) {
+    const pmType = result.rows[0].pm_type
+
+    if (pmType === 'personal') {
+      docNeed = docNeed.map(d => (d === 'PM' ? 'PM1' : d))
+    } else if (pmType === 'commercial') {
+      docNeed = docNeed.map(d => (d === 'PM' ? 'PM2' : d))
+    }
+  }
 
   const merger = new PDFMerger()
 
