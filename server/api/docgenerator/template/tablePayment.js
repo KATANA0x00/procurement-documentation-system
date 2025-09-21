@@ -1,4 +1,9 @@
+import num2th from '~/composables/num2th'
+import numBreak from '~/composables/numBreak'
+
 export function tablePayment (list, maxRows) {
+  const total = list.reduce((acc, item) => acc + item.amount_b + (item.amount_s*0.01), 0)
+
   const paddedRows = Array.from({ length: maxRows - list.length }, (_, index) => [
     { text: ' ', border: [true, false, true, false] },
     { text: ' ', border: [true, false, true, false] },
@@ -65,7 +70,7 @@ export function tablePayment (list, maxRows) {
               border: [true, false, true, false]
             },
             {
-              text: item.amount_b,
+              text: numBreak(item.amount_b).slice(0,-3),
               alignment: 'center',
               border: [true, false, true, false]
             },
@@ -78,12 +83,12 @@ export function tablePayment (list, maxRows) {
           ]),
           ...paddedRows,
           [
-            { text: '(ห้าพันสี่ร้อยยี่สิบสี่บาทเก้าสิบสตางค์)', colSpan: 4 },
+            { text: '(' + num2th(total) + ')', colSpan: 4 },
             {},
             {},
             {},
-            { text: '5,424', alignment: 'center' },
-            { text: '90', alignment: 'center' },
+            { text: numBreak(total).slice(0,-3), alignment: 'center' },
+            { text: numBreak(total).slice(-2), alignment: 'center' },
             {}
           ]
         ]
