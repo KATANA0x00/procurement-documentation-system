@@ -30,12 +30,13 @@
 </template>
 
 <script lang="ts" setup>
-defineProps({
+const props = defineProps({
   groupName: { type: String, require: true },
   color: { type: String, require: false },
+  hide: {type: Boolean, require: false, default: true},
 });
 
-const showContent = ref(true);
+const showContent = ref(props.hide);
 </script>
 
 <style scoped>

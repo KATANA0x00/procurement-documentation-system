@@ -44,21 +44,53 @@
         >
           เพิ่มรายการ
         </button>
-        <button @click="isVAT = !isVAT">
-          ราคารายการ{{ isVAT ? "ไม่" : "" }}รวมภาษี
-        </button>
+        <div>
+          <button
+            @click="isVAT = !isVAT"
+            style="
+              display: flex;
+              align-items: center;
+              gap: 10px;
+              background-color: transparent;
+              border: none;
+              cursor: pointer;
+              padding: 0 15px;
+            "
+          >
+            <Icon
+              style="color: var(--color-orange)"
+              :name="isVAT ? 'bi:toggle-off' : 'bi:toggle-on'"
+              size="1.5em"
+            />
+            <span
+              style="color: var(--color-orange)"
+              :style="
+                isVAT
+                  ? {
+                      textDecoration: 'none',
+                      textDecorationThickness: undefined,
+                    }
+                  : {
+                      textDecoration: 'line-through',
+                      textDecorationThickness: '2px',
+                    }
+              "
+              >ราคารายการรวมภาษี</span
+            >
+          </button>
+        </div>
       </div>
 
       <span style="text-align: end" class="hightlight">ราคารวมรายการ</span>
       <span style="text-align: end; padding-right: 10px" class="hightlight">
         {{
-          numBreak((isVAT ? summarize() : summarize() / 107 * 100).toFixed(2))
+          numBreak((isVAT ? summarize() : (summarize() / 107) * 100).toFixed(2))
         }}
       </span>
       <span></span>
       <span style="text-align: end">รวมภาษีมูลค่าเพิ่ม 7%</span>
       <span style="text-align: end; padding-right: 10px">{{
-        numBreak((summary * 7 / 107).toFixed(2))
+        numBreak(((summary * 7) / 107).toFixed(2))
       }}</span>
       <span></span>
       <span
@@ -73,9 +105,7 @@
       <span
         style="font-weight: 600; text-align: end; padding-right: 10px"
         class="hightlight"
-        >{{
-          numBreak(summary)
-        }}</span
+        >{{ numBreak(summary) }}</span
       >
     </div>
   </div>
@@ -121,13 +151,12 @@ watch(
 watch(
   [datas, isVAT],
   () => {
-    const base = datas.value.reduce((acc, item) => acc + item.total, 0)
-    const total = isVAT.value ? base + base * 0.07 : base
-    summary.value = total.toFixed(2)
+    const base = datas.value.reduce((acc, item) => acc + item.total, 0);
+    const total = isVAT.value ? base + base * 0.07 : base;
+    summary.value = total.toFixed(2);
   },
   { deep: true }
-)
-
+);
 </script>
 
 <style scoped>

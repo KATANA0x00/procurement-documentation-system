@@ -18,5 +18,14 @@ export default defineNuxtConfig({
     public: {
       NUXT_DATE_NOW: process.env.NUXT_DATE_NOW
     }
+  },
+
+  app: {
+    head: {
+      link: [
+        { rel: 'icon', type: 'image/png', href: '/favicon.png' },
+        { rel: 'apple-touch-icon', href: '/favicon.png' } // optional for iOS
+      ]
+    }
   }
 })

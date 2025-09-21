@@ -1,26 +1,86 @@
 <template>
-  <div v-if="PDFLoad" style="
+  <div
+    v-if="popupComment"
+    style="
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: rgba(128, 128, 128, 0.2);
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    "
+  >
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        background-color: var(--color-theme);
+        padding: 20px;
+        border-radius: 10px;
+      "
+    >
+      <label
+        style="font-size: 24px; margin-bottom: 10px; color: var(--color-orange)"
+        >คำแนะนำการแก้ไข</label
+      >
+      <textarea
+        v-model="messageInput"
+        placeholder="ระบุคำแนะนำการแก้ไข"
+        style="
+          width: 400px;
+          height: 300px;
+          border-radius: 8px;
+          border: 1px solid var(--color-sub-mid);
+          padding: 10px 20px;
+          font-size: 16px;
+          margin-bottom: 20px;
+          background-color: var(--color-sub-light);
+        "
+      ></textarea>
+      <div style="display: flex; justify-content: space-between;">
+        <button @click="cancelHandler()" class="getComment-btn-cancel">
+          ยกเลิก
+        </button>
+        <button @click="submitHandler()" class="getComment-btn">
+          ส่งแก้ไข
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    v-if="PDFLoad"
+    style="
       z-index: 1;
       top: 0;
       left: 0;
       position: absolute;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(128, 128, 128, 0.4);
+      background-color: rgba(128, 128, 128, 0.2);
       display: flex;
       align-items: center;
       justify-content: center;
-    ">
-    <Icon name="line-md:downloading-loop" size="12em"
-      style="color: var(--color-orange); transform: translateY(-100px)" />
+    "
+  >
+    <Icon
+      name="line-md:downloading-loop"
+      size="12em"
+      style="color: var(--color-orange); transform: translateY(-100px)"
+    />
   </div>
   <div style="display: flex">
     <div class="navPage">
-      <div :style="{
-        color: getStatusInfo(data.status).color,
-        border: `solid ${getStatusInfo(data.status).color} 3px`,
-        backgroundColor: getStatusInfo(data.status).color + '15',
-      }" style="
+      <div
+        :style="{
+          color: getStatusInfo(data.status).color,
+          border: `solid ${getStatusInfo(data.status).color} 3px`,
+          backgroundColor: getStatusInfo(data.status).color + '15',
+        }"
+        style="
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -29,100 +89,194 @@
           margin-bottom: 15px;
           padding: 10px 0;
           cursor: default;
-        ">
-        <Icon :name="getStatusInfo(data.status).iconName || ''" size="2em"
-          :style="{ color: getStatusInfo(data.status).color }" />
+        "
+      >
+        <Icon
+          :name="getStatusInfo(data.status).iconName || ''"
+          size="2em"
+          :style="{ color: getStatusInfo(data.status).color }"
+        />
         {{ getStatusText(data.status) }}
       </div>
 
-      <Svgbutton v-for="tab in tabList" :key="tab.page" :class="activePage === tab.page ? 'active' : undefined"
-        :color="activePage === tab.page ? 'var(--color-orange)' : undefined" :iconName="tab.iconName"
-        @click="activePage = tab.page">
+      <Svgbutton
+        v-for="tab in tabList"
+        :key="tab.page"
+        :class="activePage === tab.page ? 'active' : undefined"
+        :color="activePage === tab.page ? 'var(--color-orange)' : undefined"
+        :iconName="tab.iconName"
+        @click="activePage = tab.page"
+      >
         {{ tab.text }}
       </Svgbutton>
     </div>
     <div class="bodyPage">
       <div class="actionPage">
-        <div v-if="activePage === 'table-page'" style="display: flex; position: absolute; left: 0">
-          <Svgbutton iconName="material-symbols:docs-add-on-rounded" color="#FFF" style="
+        <div
+          v-if="activePage === 'table-page'"
+          style="display: flex; position: absolute; left: 0"
+        >
+          <Svgbutton
+            iconName="material-symbols:docs-add-on-rounded"
+            color="#FFF"
+            style="
               background-color: #30a951;
               padding-right: 20px;
               border-radius: 8px 0 0 8px;
-            " @click="triggerCSV">เพิ่มจากไฟล์</Svgbutton>
-          <input ref="csvInput" type="file" accept="application/csv" style="display: none" @change="uploadCSV" />
+            "
+            @click="triggerCSV"
+            >เพิ่มจากไฟล์</Svgbutton
+          >
+          <input
+            ref="csvInput"
+            type="file"
+            accept="application/csv"
+            style="display: none"
+            @change="uploadCSV"
+          />
           <div>
-            <Svgbutton iconName="ic:round-file-download" color="#FFF" style="
+            <Svgbutton
+              iconName="ic:round-file-download"
+              color="#FFF"
+              style="
                 background-color: #30a951;
                 margin-left: 0px;
                 border-radius: 0 8px 8px 0;
-              " @click="downloadTemplate()" />
+              "
+              @click="downloadTemplate()"
+            />
           </div>
         </div>
-        <Svgbutton v-if="activePage === 'attach-page'" iconName="solar:clipboard-outline" color="#FFF" style="
+        <Svgbutton
+          v-if="activePage === 'attach-page'"
+          iconName="solar:clipboard-outline"
+          color="#FFF"
+          style="
             background-color: #30a951;
             padding-right: 15px;
             position: absolute;
             left: 0;
-          " @click="triggerUpload">เพิ่มไฟล์แนบ</Svgbutton>
-        <input ref="fileInput" type="file" accept="application/pdf" style="display: none" @change="handleFileChange"
-          multiple />
-        <Svgbutton iconName="hugeicons:pdf-01" color="#FFF" style="
+          "
+          @click="triggerUpload"
+          >เพิ่มไฟล์แนบ</Svgbutton
+        >
+        <input
+          ref="fileInput"
+          type="file"
+          accept="application/pdf"
+          style="display: none"
+          @change="handleFileChange"
+          multiple
+        />
+        <Svgbutton
+          iconName="hugeicons:pdf-01"
+          color="#FFF"
+          style="
             background-color: #fb4141;
             padding-left: 10px;
             padding-right: 20px;
             border-radius: 8px 0 0 8px;
             margin-right: 2px;
-          " @click="generatePDF()">PDF
+          "
+          @click="generatePDF()"
+          >PDF
         </Svgbutton>
         <div ref="pdfRef">
-          <Svgbutton iconName="solar:alt-arrow-down-bold" color="#FFF" style="
+          <Svgbutton
+            iconName="solar:alt-arrow-down-bold"
+            color="#FFF"
+            style="
               background-color: #fb4141;
               margin-left: 2px;
               border-radius: 0 8px 8px 0;
-            " @click="pdfIsActive = !pdfIsActive" />
-          <ul class="actionList" :style="[
-            pdfIsActive ? {} : { visibility: 'hidden', overflow: 'hidden' },
-            data.status === 'done' ? { right: 0 } : { right: '200px' },
-          ]">
-            <li v-for="item in quickPDFList" @click="generatePDF(item.docNeed)">{{ item.text }}</li>
+            "
+            @click="pdfIsActive = !pdfIsActive"
+          />
+          <ul
+            class="actionList"
+            style="width: 25%"
+            :style="[
+              pdfIsActive ? {} : { visibility: 'hidden', overflow: 'hidden' },
+              data.status === 'done' ? { right: 0 } : { right: '200px' },
+            ]"
+          >
+            <li v-for="item in quickPDFList" @click="generatePDF(item.docNeed)">
+              {{ item.text }}
+            </li>
           </ul>
         </div>
-        <Svgbutton v-for="(item, i) in quickActionList.filter((q) => q.isDisplay)" :key="i"
-          iconName="mingcute:send-line" color="#FFF" style="
+        <Svgbutton
+          v-for="(item, i) in quickActionList.filter((q) => q.isDisplay)"
+          :key="i"
+          iconName="mingcute:send-line"
+          color="#FFF"
+          style="
             background-color: #00aaff;
             padding-right: 20px;
             margin-right: 2px;
             border-radius: 8px 0 0 8px;
-          " @click="actionDoc(item.action)">
+          "
+          @click="actionDoc(item.action)"
+        >
           {{ item.label }}
         </Svgbutton>
         <div ref="docRef">
-          <Svgbutton iconName="solar:alt-arrow-down-bold" color="#FFF"
-            :style="data.status === 'done' ? { display: 'none' } : undefined" style="
+          <Svgbutton
+            iconName="solar:alt-arrow-down-bold"
+            color="#FFF"
+            :style="data.status === 'done' ? { display: 'none' } : undefined"
+            style="
               background-color: #00aaff;
               margin-left: 2px;
               border-radius: 0 8px 8px 0;
-            " @click="docIsActive = !docIsActive" />
-          <ul class="actionList" :style="docIsActive
-            ? undefined
-            : { visibility: 'hidden', overflow: 'hidden' }
-            ">
+            "
+            @click="docIsActive = !docIsActive"
+          />
+          <ul
+            class="actionList"
+            :style="
+              docIsActive
+                ? undefined
+                : { visibility: 'hidden', overflow: 'hidden' }
+            "
+          >
             <li @click="actionDoc('save')">บันทึก</li>
             <li @click="actionDoc('edit')" v-if="role === 'admin'">ส่งแก้ไข</li>
-            <div style="height: 10px; background-color: var(--color-sub-mid)"
-              v-if="role === 'admin' && data.status === 'signed'"></div>
-            <li @click="actionDoc('approve')" v-if="role === 'admin' && data.status === 'signed'">
+            <div
+              style="height: 10px; background-color: var(--color-sub-mid)"
+              v-if="role === 'admin' && data.status === 'signed'"
+            ></div>
+            <li
+              @click="actionDoc('approve')"
+              v-if="role === 'admin' && data.status === 'signed'"
+            >
               ส่งขอเอกสารใหม่
             </li>
           </ul>
         </div>
       </div>
       <DocInfo v-if="activePage === 'info-page'" v-model:data="data" />
-      <DocTable v-if="activePage === 'table-page'" v-model:data="data.doc_list" v-model:summary="data.expenses_summary"
-        v-model:isVAT="data.is_vat_included" />
-      <DocAttch v-if="activePage === 'attach-page'" v-model:data="data.doc_file" v-model:viewPDF="viewPDF"
-        @removeFile="deletedFiles.push($event)" />
-      <DocTrack v-if="activePage === 'track-page'" v-model:datas="data" v-model:docId="id" />
+      <DocPayment
+        v-if="activePage === 'payment-page'"
+        v-model:dataPayment="dataPayment"
+      />
+      <DocTable
+        v-if="activePage === 'table-page'"
+        v-model:data="data.doc_list"
+        v-model:summary="data.expenses_summary"
+        v-model:isVAT="data.is_vat_included"
+      />
+      <DocAttch
+        v-if="activePage === 'attach-page'"
+        v-model:data="data.doc_file"
+        v-model:viewPDF="viewPDF"
+        @removeFile="deletedFiles.push($event)"
+      />
+      <DocTrack
+        v-if="activePage === 'track-page'"
+        v-model:datas="data"
+        v-model:docId="id"
+      />
     </div>
   </div>
 </template>
@@ -155,6 +309,11 @@ const tabList = [
     text: "เอกสารแนบ",
   },
   {
+    page: "payment-page",
+    iconName: "tdesign:bill",
+    text: "ใบสำคัญจ่าย",
+  },
+  {
     page: "track-page",
     iconName: "tabler:route-square",
     text: "เส้นทาง",
@@ -162,10 +321,13 @@ const tabList = [
 ];
 
 const quickPDFList = [
-  { text: 'พ.1', docNeed: ['P01'] },
-  { text: 'พ.1 + พจ.1', docNeed: ['P01', 'PJ1'] },
-  { text: 'พ.1 + พ.43', docNeed: ['P01', 'P43'] }
-]
+  { text: "พ.1", docNeed: ["P01"] },
+  { text: "พจ.1 + พ.43 + ใบสำคัญจ่าย", docNeed: ["PJ1", "P43", "PM"] },
+  {
+    text: "พ.1 + พจ.1 + พ.43 + ใบสำคัญจ่าย",
+    docNeed: ["P01", "PJ1", "P43", "PM"],
+  },
+];
 
 const quickActionList = computed(() => [
   {
@@ -230,12 +392,12 @@ async function handleFileChange(event) {
 
 const uploadFiles = async (docid = id) => {
   // --- Step 1: Upload new files ---
-  const newFormData = new FormData()
+  const newFormData = new FormData();
   for (const item of data.value.doc_file) {
-    const file = fileMap.value.get(item.name)
+    const file = fileMap.value.get(item.name);
     if (file) {
       // new file (because it's still in fileMap)
-      newFormData.append("files", file, item.file)
+      newFormData.append("files", file, item.file);
     }
   }
 
@@ -244,10 +406,10 @@ const uploadFiles = async (docid = id) => {
       const res = await fetch(`/api/db/doc/upload/${docid}`, {
         method: "POST",
         body: newFormData,
-      })
-      if (!res.ok) throw new Error(`Upload failed with status ${res.status}`)
+      });
+      if (!res.ok) throw new Error(`Upload failed with status ${res.status}`);
     } catch (err) {
-      console.error("Upload failed:", err)
+      console.error("Upload failed:", err);
     }
   }
   // --- Step 2: Delete removed files ---
@@ -258,13 +420,12 @@ const uploadFiles = async (docid = id) => {
       body: JSON.stringify({
         files: deletedFiles.value,
       }),
-    })
-    if (!res.ok) throw new Error(`Delete failed with status ${res.status}`)
+    });
+    if (!res.ok) throw new Error(`Delete failed with status ${res.status}`);
   } catch (err) {
-    console.error("Delete failed:", err)
+    console.error("Delete failed:", err);
   }
-}
-
+};
 
 function triggerCSV() {
   csvInput.value.click();
@@ -294,36 +455,71 @@ async function actionDoc(status, stay = false) {
     return false;
   }
 
+  const message = ref("");
+  if (status === "edit") {
+    const result = await getComment();
+    if (result === null) {
+      return false;
+    }
+    message.value = result;
+  }
+
   const response = await $fetch(`/api/db/doc/${status}/${id}`, {
     method: "POST",
     body: {
       userId: userInfo.value.id,
       datas: { ...data.value, department: userInfo.value.department_id },
+      dataPayment: dataPayment.value,
+      message: message.value,
     },
-  })
+  });
   if (uploadedFileMeta.value.length > 0 || deletedFiles.value.length > 0) {
     if (id === "new") {
       uploadFiles(response.docid);
+    } else {
+      uploadFiles();
     }
-    else { uploadFiles(); }
   }
-
 
   if (!stay) {
     navigateTo(`/auth/${role}`);
+  } else {
+    return response.docid;
   }
-  else {
-    return response.docid
-  }
+}
+
+const messageInput = ref("");
+const submitHandler = ref(null);
+const cancelHandler = ref(null);
+const popupComment = ref(false);
+function getComment() {
+  popupComment.value = true;
+
+  return new Promise((resolve) => {
+    const onSubmit = () => {
+      popupComment.value = false;
+      resolve(messageInput.value);
+      messageInput.value = "";
+    };
+    const onCancel = () => {
+      popupComment.value = false;
+      resolve(null); // ✅ indicate cancel
+      messageInput.value = "";
+    };
+    submitHandler.value = onSubmit;
+    cancelHandler.value = onCancel;
+  });
 }
 
 async function viewPDF(fileElement) {
-  const docid = await actionDoc('save', true)
-  if(!docid){ return; }
-  pdfIsActive.value = false
-  PDFLoad.value = true
+  const docid = await actionDoc("save", true);
+  if (!docid) {
+    return;
+  }
+  pdfIsActive.value = false;
+  PDFLoad.value = true;
 
-  const pdfWindow = window.open('', '_blank')
+  const pdfWindow = window.open("", "_blank");
   pdfWindow.document.write(`
     <html>
       <head>
@@ -346,32 +542,34 @@ async function viewPDF(fileElement) {
         <h2>⏳ Please wait... generating your PDF</h2>
       </body>
     </html>
-  `)
-  pdfWindow.document.close()
+  `);
+  pdfWindow.document.close();
 
   try {
     const response = await $fetch(`/api/db/loadeddocument/${docid}`, {
-      method: 'POST',
+      method: "POST",
       body: fileElement,
-      responseType: 'arrayBuffer'
-    })
+      responseType: "arrayBuffer",
+    });
 
-    const blob = new Blob([response], { type: 'application/pdf' })
-    const url = URL.createObjectURL(blob)
+    const blob = new Blob([response], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
 
-    pdfWindow.location.href = url
+    pdfWindow.location.href = url;
   } finally {
-    PDFLoad.value = false
+    PDFLoad.value = false;
   }
 }
 // ------------------- Document ------------------ //
-async function generatePDF(docNeed = ['P01', 'PJ1', 'P43', 'AFI']) {
-  const docid = await actionDoc('save', true)
-  if(!docid){ return; }
-  pdfIsActive.value = false
-  PDFLoad.value = true
+async function generatePDF(docNeed = ["P01", "PJ1", "P43", "AFI", "PM"]) {
+  const docid = await actionDoc("save", true);
+  if (!docid) {
+    return;
+  }
+  pdfIsActive.value = false;
+  PDFLoad.value = true;
 
-  const pdfWindow = window.open('', '_blank')
+  const pdfWindow = window.open("", "_blank");
   pdfWindow.document.write(`
     <html>
       <head>
@@ -394,34 +592,40 @@ async function generatePDF(docNeed = ['P01', 'PJ1', 'P43', 'AFI']) {
         <h2>⏳ Please wait... generating your PDF</h2>
       </body>
     </html>
-  `)
-  pdfWindow.document.close()
+  `);
+  pdfWindow.document.close();
 
   try {
     const res = await $fetch.raw(`/api/docgenerator/${docid}`, {
-      method: 'POST',
-      body: { docNeed }
-    })
+      method: "POST",
+      body: { docNeed },
+    });
 
-    const blob = new Blob([res._data], { type: 'application/pdf' })
-    const url = URL.createObjectURL(blob)
+    const blob = new Blob([res._data], { type: "application/pdf" });
+    const url = URL.createObjectURL(blob);
 
-    pdfWindow.location.href = url
+    pdfWindow.location.href = url;
   } finally {
-    PDFLoad.value = false
+    PDFLoad.value = false;
   }
 }
-
 
 // ------------------- API CALL ------------------ //
 const data = ref(
   await $fetch(
-    `/api/db/full_document/${id}${id === "new" ? `?usrid=${userInfo.value.department_id}` : ""
+    `/api/db/full_document/${id}${
+      id === "new" ? `?usrid=${userInfo.value.department_id}` : ""
     }`,
     {
       method: "GET",
     }
   )
+);
+
+const dataPayment = ref(
+  await $fetch(`/api/db/payment_document/${id}`, {
+    method: "GET",
+  })
 );
 // click outside logic
 const docRef = ref(null);
@@ -467,7 +671,7 @@ onBeforeUnmount(() => {
     justify-content: flex-end;
     position: relative;
 
-    div>button {
+    div > button {
       height: 100%;
     }
 
@@ -500,5 +704,33 @@ onBeforeUnmount(() => {
       }
     }
   }
+}
+
+.getComment-btn {
+  background-color: transparent;
+  color: var(--color-orange);
+  border: 2px solid var(--color-orange);
+  border-radius: 10px;
+  padding: 10px 20px;
+  width: fit-content;
+}
+
+.getComment-btn:hover {
+  background-color: var(--color-orange);
+  color: var(--color-theme);
+}
+
+.getComment-btn-cancel {
+  background-color: transparent;
+  color: var(--color-sub-dark);
+  border: 2px solid var(--color-sub-dark);
+  border-radius: 10px;
+  padding: 10px 20px;
+  width: fit-content;
+}
+
+.getComment-btn-cancel:hover {
+  background-color: var(--color-sub-dark);
+  color: var(--color-theme);
 }
 </style>
