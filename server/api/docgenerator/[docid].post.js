@@ -123,6 +123,7 @@ export default defineEventHandler(async event => {
   }
 
   if (docNeed.includes('AFI')) {
+    console.log('Include AFI')
     const localFiles = result.rows[0].doc_file.map(item =>
       path.join(process.cwd(), 'uploads', docid, item.file)
     )
