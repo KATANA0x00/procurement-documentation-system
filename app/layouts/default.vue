@@ -76,6 +76,11 @@ async function onLogout() {
   align-items: center;
   padding: 0 40px;
 
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--color-theme);
+
   .left {
     display: flex;
     align-items: center;
