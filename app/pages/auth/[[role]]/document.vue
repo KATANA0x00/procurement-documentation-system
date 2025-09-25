@@ -207,6 +207,7 @@
         </div>
         <Svgbutton
           v-for="(item, i) in quickActionList.filter((q) => q.isDisplay)"
+          v-if="data.status !== 'done'"
           :key="i"
           iconName="mingcute:send-line"
           color="#FFF"
