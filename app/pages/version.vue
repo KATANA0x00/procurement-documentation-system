@@ -14,6 +14,9 @@
 </template>
 
 <script setup>
+definePageMeta({
+    layout: 'empty'
+})
 const lastDeploy = ref(null);
 
 onMounted(() => {

@@ -19,9 +19,7 @@
       <ul
         class="dropdownList"
         v-if="dropdown.length > 0"
-        :style="
-          isActive ? undefined : { visibility: 'hidden', overflow: 'hidden' }
-        "
+        v-show="isActive"
       >
         <li
           v-for="(list, idx) in dropdown"

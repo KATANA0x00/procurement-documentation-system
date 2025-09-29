@@ -1,5 +1,7 @@
 <template>
-  <div class="accordion">
+  <div class="accordion"
+    :style="{overflow: showContent ? '' : 'hidden'}"
+  >
     <button
       class="groupHeader"
       :style="{ backgroundColor: color + '25' }"
@@ -22,7 +24,7 @@
     </button>
     <div
       class="content"
-      :style="{ overflow: 'hidden', height: showContent ? 'auto' : '0' }"
+      :style="{ height: showContent ? 'auto' : '0' }"
     >
       <slot />
     </div>

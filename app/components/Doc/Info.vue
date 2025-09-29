@@ -29,7 +29,7 @@
         <InputLabel v-model:value="data.doc_requester" style="flex: 1"
           >ผู้ขอให้จัดหา</InputLabel
         >
-        <InputLabel v-model:value="data.doc_department" style="flex: 1" end
+        <InputLabel v-model:value="data.doc_department" :dropdown="departmentList" style="flex: 1" end
           >สังกัด</InputLabel
         >
       </div>
@@ -80,6 +80,7 @@
 
 <script setup>
 const data = defineModel("data");
+const departmentList = defineModel("departmentList");
 
 const doc_type = ["จัดซื้อ", "จัดจ้าง"];
 const doc_category = ["วัสดุการศึกษา"];

@@ -26,12 +26,10 @@
 
     <div class="navUser">
       <div>
-        <div
-          style="font-weight: 600; font-size: 20px; color: var(--color-orange)"
-        >
+        <div class="name">
           {{ profileData.name }}
         </div>
-        <div>สังกัด {{ profileData.department }}</div>
+        <div class="department">สังกัด {{ profileData.department_name }}</div>
       </div>
       <button @click="onLogout">
         <Icon name="solar:logout-linear" size="2em" />
@@ -41,6 +39,7 @@
   <div class="container">
     <slot />
   </div>
+  
 </template>
 
 <script setup>
@@ -104,6 +103,12 @@ async function onLogout() {
           font-weight: 400;
         }
 
+        @media (max-width: 1366px) {
+          a {
+            font-size: 16px;
+          }
+        }
+
         a:hover {
           color: var(--color-orange);
           text-decoration: underline;
@@ -153,5 +158,21 @@ async function onLogout() {
 .container {
   width: 80vw;
   margin: 30px auto;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--color-orange);
+}
+
+@media (max-width: 1366px) {
+  .name {
+    font-size: 16px;
+  }
+
+  .department {
+    font-size: 12px;
+  }
 }
 </style>

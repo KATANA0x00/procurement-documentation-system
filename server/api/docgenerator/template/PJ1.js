@@ -33,7 +33,7 @@ export function docDefinition_PJ1 (data) {
     {
       table: {
         headerRows: 1,
-        widths: [24, 34, '*', 36, 48, 50, 58],
+        widths: [24, 34, '*', 38, 48, 50, 58],
         body: [
           [
             {
@@ -98,7 +98,15 @@ export function docDefinition_PJ1 (data) {
             {},
             {},
             {},
-            { text: numBreak(data.is_vat_included ? data.expenses_summary : data.expenses_summary / 107 * 100), alignment: 'right', colSpan: 2 },
+            {
+              text: numBreak(
+                data.is_vat_included
+                  ? data.expenses_summary
+                  : (data.expenses_summary / 107) * 100
+              ),
+              alignment: 'right',
+              colSpan: 2
+            },
             {}
           ],
           [
@@ -112,7 +120,11 @@ export function docDefinition_PJ1 (data) {
             {},
             {},
             {},
-            { text: numBreak(data.expenses_summary * 7 / 107), alignment: 'right', colSpan: 2 },
+            {
+              text: numBreak((data.expenses_summary * 7) / 107),
+              alignment: 'right',
+              colSpan: 2
+            },
             {}
           ],
           [
@@ -126,7 +138,11 @@ export function docDefinition_PJ1 (data) {
             {},
             {},
             {},
-            { text: numBreak(data.expenses_summary), alignment: 'right', colSpan: 2 },
+            {
+              text: numBreak(data.expenses_summary),
+              alignment: 'right',
+              colSpan: 2
+            },
             {}
           ],
           [

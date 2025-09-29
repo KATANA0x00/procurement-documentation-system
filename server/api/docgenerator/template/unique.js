@@ -88,7 +88,7 @@ export function unique (data) {
             },
             {},
             {
-              text: data.uid_plan.text,
+              text: data.uid_plan.uid,
               colSpan: 2
             },
             {}

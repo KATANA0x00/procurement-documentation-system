@@ -256,11 +256,7 @@
           </ul>
         </div>
       </div>
-      <DocInfo v-if="activePage === 'info-page'" v-model:data="data" />
-      <DocPayment
-        v-if="activePage === 'payment-page'"
-        v-model:dataPayment="dataPayment"
-      />
+      <DocInfo v-if="activePage === 'info-page'" v-model:data="data" v-model:departmentList="userInfo.departments"/>
       <DocTable
         v-if="activePage === 'table-page'"
         v-model:data="data.doc_list"
@@ -272,6 +268,10 @@
         v-model:data="data.doc_file"
         v-model:viewPDF="viewPDF"
         @removeFile="deletedFiles.push($event)"
+      />
+      <DocPayment
+        v-if="activePage === 'payment-page'"
+        v-model:dataPayment="dataPayment"
       />
       <DocTrack
         v-if="activePage === 'track-page'"
@@ -442,6 +442,9 @@ async function uploadCSV(event) {
 
 // ------------------- Document Action ------------------ //
 async function actionDoc(status, stay = false) {
+  if(data.value.status  === 'done'){
+    return id;
+  }
   const prevStatus = data.value.status;
   if (
     role === "" &&
@@ -466,11 +469,15 @@ async function actionDoc(status, stay = false) {
     message.value = result;
   }
 
+  const idx = userInfo.value.departments.findIndex(
+    dept => dept === data.value.doc_department
+  );
+
   const response = await $fetch(`/api/db/doc/${status}/${id}`, {
     method: "POST",
     body: {
       userId: userInfo.value.id,
-      datas: { ...data.value, department: userInfo.value.department_id },
+      datas: { ...data.value, department: userInfo.value.department_ids[idx] },
       dataPayment: dataPayment.value,
       message: message.value,
     },
@@ -616,7 +623,7 @@ async function generatePDF(docNeed = ["P01", "PJ1", "P43", "AFI", "PM"]) {
 const data = ref(
   await $fetch(
     `/api/db/full_document/${id}${
-      id === "new" ? `?usrid=${userInfo.value.department_id}` : ""
+      id === "new" ? `?usrid=${userInfo.value.department_ids[0]}` : ""
     }`,
     {
       method: "GET",
@@ -705,6 +712,12 @@ onBeforeUnmount(() => {
         color: var(--color-orange);
       }
     }
+  }
+}
+
+@media (max-width: 1366px) {
+  .bodyPage {
+    margin: 0 100px 0 100px;
   }
 }
 

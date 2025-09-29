@@ -2,7 +2,7 @@ import { connectPG } from '../../connection'
 
 export default defineEventHandler(async event => {
   const { id } = event.context.params
-
+  
   if (!id) {
     throw new Error("Missing or Invalid 'id' parameter")
   }

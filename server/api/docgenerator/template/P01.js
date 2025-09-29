@@ -34,7 +34,8 @@ export function docDefinition_P01 (data) {
             { text: '1.', alignment: 'center' },
             { text: data.doc_category, alignment: 'left' },
             { text: data.doc_list.length + ' รายการ', alignment: 'center' },
-            { text: numBreak((Math.ceil(data.expenses_summary / 1000) * 1000).toFixed(2)), alignment: 'right' },
+            // { text: numBreak((Math.ceil(data.expenses_summary / 1000) * 1000).toFixed(2)), alignment: 'right' },
+            { text: numBreak(data.expenses_summary), alignment: 'right' },
             {}
           ],
           [' ', {}, {}, {}, {}],
@@ -48,7 +49,8 @@ export function docDefinition_P01 (data) {
             },
             {},
             {},
-            { text: numBreak((Math.ceil(data.expenses_summary / 1000) * 1000).toFixed(2)), alignment: 'right' },
+            // { text: numBreak((Math.ceil(data.expenses_summary / 1000) * 1000).toFixed(2)), alignment: 'right' },
+            { text: numBreak(data.expenses_summary), alignment: 'right' },
             { text: ' ', border: [true, true, false, false] }
           ],
           [

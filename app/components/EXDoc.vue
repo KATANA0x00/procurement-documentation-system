@@ -3,7 +3,10 @@
     class="content"
     :to="`${$route.fullPath.replace(/\/$/, '')}/document?doc=${data.id}`"
   >
-    <span style="color: var(--color-sub-dark)">{{ data.doc_id_p01 }}{{ data.doc_id_pj1 ? ' - '+data.doc_id_pj1 : '' }}</span>
+    <span style="color: var(--color-sub-dark)"
+      >{{ data.doc_id_p01
+      }}{{ data.doc_id_pj1 ? " - " + data.doc_id_pj1 : "" }}</span
+    >
     <span>{{ data.doc_requester }}</span>
     <span><StatusIcon :status="data.status" /></span>
     <span>{{ data.doc_category }}</span>
@@ -32,6 +35,16 @@ defineProps({
   span {
     font-size: 14px;
     margin: 10px 15px;
+  }
+}
+
+@media (max-width: 1366px) {
+  .content {
+    grid-template-columns: 1.8fr 5.5fr 2fr 2fr 2fr;
+  }
+
+  .content > span {
+    font-size: 12px;
   }
 }
 

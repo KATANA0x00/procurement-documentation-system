@@ -11,7 +11,15 @@ export default defineEventHandler(async event => {
   const client = connectPG()
   client.connect()
   const query = `
-    SELECT dp.name AS dp_name, dc.id, dc.doc_id_p01, dc.doc_id_pj1, dc.edited_date, dc.status, dc.doc_category, dc.doc_requester
+    SELECT
+      dp.name AS dp_name,
+      dc.id,
+      dc.doc_id_p01,
+      dc.doc_id_pj1,
+      dc.edited_date,
+      dc.status,
+      dc.doc_category,
+      dc.doc_requester
     FROM departments dp
     JOIN documents dc ON dc.department = dp.id
     WHERE dp.procurementer ILIKE $1
