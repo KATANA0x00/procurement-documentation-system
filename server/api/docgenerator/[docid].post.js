@@ -74,7 +74,7 @@ export default defineEventHandler(async event => {
         dc.doc_money_year,
         dc.doc_requester,
         dp.principal AS principal,
-        dp.procurementer AS procurementer,
+        u.name AS procurementer,
         dp.name AS department,
         dp.uid AS uid_department,
         dc.doc_reason,
@@ -97,6 +97,7 @@ export default defineEventHandler(async event => {
       FROM documents dc
       JOIN departments dp ON dc.department = dp.id
       JOIN paymentation pm ON dc.id = pm.doc_id
+      JOIN users u ON dp.procurementer = u.id
       WHERE dc.id = $1
     `,
     [docid]
@@ -123,7 +124,6 @@ export default defineEventHandler(async event => {
   }
 
   if (docNeed.includes('AFI')) {
-    console.log('Include AFI')
     const localFiles = result.rows[0].doc_file.map(item =>
       path.join(process.cwd(), 'uploads', docid, item.file)
     )

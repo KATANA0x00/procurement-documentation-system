@@ -1,6 +1,6 @@
 <template>
   <div class="filter">
-    <div style="display: flex; align-items: center">
+    <div style="display: flex; align-items: center;">
       <span>ตัวกรอง :&nbsp;</span>
       <Svgbutton
         v-for="status in statusList"
@@ -14,7 +14,7 @@
       </Svgbutton>
     </div>
 
-    <div style="display: flex; align-items: center">
+    <div style="display: flex; align-items: center;">
       <InputBtn
         :placeholder="`ค้นหา เลขที่เอกสาร${creatable ? '' : ' หรือ สังกัด'}`"
         iconName="heroicons:magnifying-glass-16-solid"
@@ -65,6 +65,14 @@ const statusList = ref([
   .active {
     background-color: var(--color-sub-light);
     border: solid 1px var(--color-sub-mid);
+  }
+}
+
+@media (max-width: 1366px) {
+  .filter {
+    div > button {
+      margin: 0;
+    }
   }
 }
 </style>

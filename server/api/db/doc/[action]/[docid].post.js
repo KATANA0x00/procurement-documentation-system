@@ -91,8 +91,6 @@ FROM new_doc;
       ]
     )
     docid = result.rows[0].id
-    console.log(docid)
-
   } else {
     const res = await client.query(
       `
@@ -119,6 +117,7 @@ FROM new_doc;
     WITH updated_doc AS (
       UPDATE documents
       SET
+        department = $29,
         edited_date = NOW(),
         status = $22,
         no = $23,
@@ -182,7 +181,8 @@ FROM new_doc;
         datas.expenses_summary,
         datas.is_vat_included,
         dataPayment.type,
-        JSON.stringify(dataPayment.list)
+        JSON.stringify(dataPayment.list),
+        datas.department
       ]
     )
   }

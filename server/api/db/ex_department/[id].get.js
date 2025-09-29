@@ -10,21 +10,34 @@ export default defineEventHandler(async event => {
   const client = connectPG()
   client.connect()
   const query = `
-        SELECT dc.id, dc.doc_id_p01, dc.doc_id_pj1, dp.name AS department, dc.doc_requester, dc.status, dc.doc_category, dc.edited_date
-        FROM documents dc
-        JOIN departments dp
-        ON dc.department = dp.id
-        WHERE dp.id = $1
-      ${filter === 'All' ? '' : 'AND dc.status ILIKE $2'}
-    `
+    SELECT
+      dp.name AS dp_name,
+      dc.id,
+      dc.doc_id_p01,
+      dc.doc_id_pj1,
+      dc.edited_date,
+      dc.status,
+      dc.doc_category,
+      dc.doc_requester
+    FROM documents dc
+    JOIN departments dp ON dc.department = dp.id
+    JOIN employees em ON em.department_id = dp.id
+    WHERE em.documenter_id ILIKE $1
+    ${filter === 'All' ? '' : 'AND dc.status ILIKE $2'}
+  `
 
   const params = filter === 'All' ? [id] : [id, filter.toLocaleLowerCase()]
   const result = await client.query(query, params)
   client.end()
 
-  const response = result.rows.length > 0
-    ? { [result.rows[0].department]: result.rows }
-    : [];
+  const response = result.rows.reduce((acc, row) => {
+    const { dp_name, ...doc } = row
+    if (!acc[dp_name]) {
+      acc[dp_name] = []
+    }
+    acc[dp_name].push(doc)
+    return acc
+  }, {})
 
   return response
 })

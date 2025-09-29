@@ -6,6 +6,10 @@ export default defineEventHandler(async event => {
     throw new Error("Missing or Invalid 'id' parameter")
   }
 
+  if(id === 'new'){
+    return []
+  }
+
   const client = connectPG()
   client.connect()
   const result = await client.query(
