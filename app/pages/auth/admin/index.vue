@@ -21,6 +21,10 @@
 </template>
 
 <script setup>
+useHead({
+  title: "PASADU : เอกสารเข้า",
+});
+
 const userInfo = useState("userInfo");
 const filterActive = ref("waiting");
 const filterSearch = ref("");

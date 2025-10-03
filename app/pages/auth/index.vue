@@ -22,6 +22,10 @@
 </template>
 
 <script setup>
+useHead({
+  title: "PASADU : ระบบเอกสาร",
+});
+
 const userInfo = useState("userInfo");
 const filterActive = ref("All");
 const filterSearch = ref("");

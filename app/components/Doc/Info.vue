@@ -2,13 +2,11 @@
   <div>
     <Accordion class="generalInfo" groupName="ทั่วไป" color="#FF8800">
       <br />
-      <div>
-        <InputLabel v-model:value="data.doc_id_p01" size="200px"
-          >เลขที่ อว. (พ.1)</InputLabel
-        >
-        <InputLabel v-model:value="data.doc_id_pj1" size="200px"
-          >เลขที่ อว. (พจ.1)</InputLabel
-        >
+      <div style="display: grid; grid-template-columns: 1fr 1fr; width: max-content;justify-items: end;">
+        <InputLabel v-model:value="data.doc_id_p01" size="200px" >เลขที่ อว. (พ.1)</InputLabel>
+        <InputDatepicker v-model:value="data.doc_date_p01">วันที่ พ.1</InputDatepicker>
+        <InputLabel v-model:value="data.doc_id_pj1" size="200px">เลขที่ อว. (พจ.1)</InputLabel>
+        <InputDatepicker v-model:value="data.doc_date_pj1">วันที่ พจ.1</InputDatepicker>
       </div>
       <div>
         <InputLabel
@@ -29,7 +27,11 @@
         <InputLabel v-model:value="data.doc_requester" style="flex: 1"
           >ผู้ขอให้จัดหา</InputLabel
         >
-        <InputLabel v-model:value="data.doc_department" :dropdown="departmentList" style="flex: 1" end
+        <InputLabel
+          v-model:value="data.doc_department"
+          :dropdown="departmentList"
+          style="flex: 1"
+          end
           >สังกัด</InputLabel
         >
       </div>

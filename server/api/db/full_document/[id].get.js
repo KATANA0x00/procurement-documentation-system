@@ -28,7 +28,7 @@ export default defineEventHandler(async event => {
       doc_type: null,
       doc_category: null,
       doc_money_source: null,
-      doc_money_year: null,
+      doc_money_year: '2569',
       doc_requester: null,
       doc_department: result.rows[0].name,
       doc_reason: null,
@@ -48,7 +48,9 @@ export default defineEventHandler(async event => {
       doc_list: [],
       doc_file: [],
       expenses_summary: 0,
-      is_vat_included: false
+      is_vat_included: false,
+      doc_date_p01: null,
+      doc_date_pj1: null
     }
   }
   const result = await client.query(
@@ -80,7 +82,9 @@ export default defineEventHandler(async event => {
       dc.doc_list,
       dc.doc_file,
       dc.expenses_summary,
-      dc.is_vat_included
+      dc.is_vat_included,
+      TO_CHAR(doc_date_p01, 'YYYY-MM-DD') AS doc_date_p01,
+      TO_CHAR(doc_date_pj1, 'YYYY-MM-DD') AS doc_date_pj1
     FROM documents dc
     JOIN departments dp ON dc.department = dp.id
     JOIN users ON users.id = dp.procurementer
