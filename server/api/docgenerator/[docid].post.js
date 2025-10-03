@@ -93,7 +93,9 @@ export default defineEventHandler(async event => {
         dc.doc_file,
         dc.is_vat_included,
         pm.type AS pm_type,
-        pm.list AS pm_list
+        pm.list AS pm_list,
+        TO_CHAR(doc_date_p01, 'YYYY-MM-DD') AS doc_date_p01,
+        TO_CHAR(doc_date_pj1, 'YYYY-MM-DD') AS doc_date_pj1
       FROM documents dc
       JOIN departments dp ON dc.department = dp.id
       JOIN paymentation pm ON dc.id = pm.doc_id

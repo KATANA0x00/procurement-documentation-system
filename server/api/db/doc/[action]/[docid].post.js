@@ -6,7 +6,7 @@ export default defineEventHandler(async event => {
   const isLog = action != 'save'
   const client = connectPG()
   client.connect()
-
+  
   // new document insert
   if (docid === 'new') {
     const result = await client.query(
@@ -38,11 +38,13 @@ export default defineEventHandler(async event => {
           doc_list,
           doc_file,
           expenses_summary,
-          is_vat_included
+          is_vat_included,
+          doc_date_p01,
+          doc_date_pj1
       ) VALUES (
           $1,  $2,  $3,  $4,  $5,  $6,  $7,  $8,  $9,
           $10, $11, $12, $13, $14, $15, $16, $17, $18,
-          $19, $20, $21, $22, $23, $24, $25, $26
+          $19, $20, $21, $22, $23, $24, $25, $26, $29, $30
       )
       RETURNING id
     ),
@@ -87,7 +89,9 @@ FROM new_doc;
         datas.expenses_summary,
         datas.is_vat_included,
         dataPayment.type,
-        JSON.stringify(dataPayment.list)
+        JSON.stringify(dataPayment.list),
+        datas.doc_date_p01,
+        datas.doc_date_pj1
       ]
     )
     docid = result.rows[0].id
@@ -143,7 +147,9 @@ FROM new_doc;
         doc_list = $20,
         doc_file = $21,
         expenses_summary = $25,
-        is_vat_included = $26
+        is_vat_included = $26,
+        doc_date_p01 = $30,
+        doc_date_pj1 = $31
       WHERE id = $24
       RETURNING id
     )
@@ -182,7 +188,9 @@ FROM new_doc;
         datas.is_vat_included,
         dataPayment.type,
         JSON.stringify(dataPayment.list),
-        datas.department
+        datas.department,
+        datas.doc_date_p01,
+        datas.doc_date_pj1
       ]
     )
   }

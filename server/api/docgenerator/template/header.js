@@ -1,5 +1,6 @@
 import path from 'path'
 import fs from 'fs'
+import formattedDate from '~/composables/formattedDate'
 
 const docLogoRaw = path.resolve(process.cwd(), 'public/doc_logo.png')
 const docLogo = fs.readFileSync(docLogoRaw).toString('base64')
@@ -33,7 +34,7 @@ export function header (data, idselect, Header, docmark = '') {
             { text: 'ที่ ', bold: true, alignment: 'right' },
             { text: 'อว.' + data['doc_id_' + idselect] },
             { text: 'วันที่', bold: true },
-            {}
+            { text: formattedDate(data[`doc_date_${idselect}`] || '').split(',')[1]}
           ],
           [
             { text: 'เรื่อง ', bold: true, alignment: 'right' },

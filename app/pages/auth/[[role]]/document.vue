@@ -163,7 +163,7 @@
         <input
           ref="fileInput"
           type="file"
-          accept="application/pdf"
+          accept=".pdf,image/png,image/jpeg"
           style="display: none"
           @change="handleFileChange"
           multiple
@@ -283,6 +283,10 @@
 </template>
 
 <script setup>
+useHead({
+  title: "PASADU : การจัดการเอกสาร",
+});
+
 const userInfo = useState("userInfo");
 const route = useRoute();
 const role = route.params.role; // admin
