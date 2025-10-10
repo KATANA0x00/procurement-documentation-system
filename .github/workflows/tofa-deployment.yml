@@ -19,20 +19,24 @@ jobs:
       - name: Get next version
         id: get_version
         run: |
-          # Get the latest tag matching vX.Y.Z
           LAST_TAG=$(git tag --sort=-creatordate | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
           echo "Last tag: $LAST_TAG"
-
+      
           if [ -z "$LAST_TAG" ]; then
             NEW_TAG="v0.2.0"
           else
-            # Increment patch version
             IFS='.' read -r MAJOR MINOR PATCH <<<"${LAST_TAG#v}"
             PATCH=$((PATCH + 1))
             NEW_TAG="v$MAJOR.$MINOR.$PATCH"
           fi
-
-          echo "New tag: $NEW_TAG"
+      
+          # Make sure it doesn’t already exist remotely
+          while git ls-remote --tags origin | grep -q "refs/tags/$NEW_TAG"; do
+            PATCH=$((PATCH + 1))
+            NEW_TAG="v$MAJOR.$MINOR.$PATCH"
+          done
+      
+          echo "Using new tag: $NEW_TAG"
           echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
 
       - name: Create and push new tag
