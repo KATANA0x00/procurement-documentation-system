@@ -19,17 +19,25 @@ jobs:
       - name: Get next version
         id: get_version
         run: |
-          # Get latest semantic tag
+          # Get the latest version tag like v1.2.3
           LAST_TAG=$(git tag --sort=-creatordate | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
           echo "Last tag: $LAST_TAG"
       
           if [ -z "$LAST_TAG" ]; then
-            NEW_TAG="v0.2.0"
+            MAJOR=0
+            MINOR=2
+            PATCH=0
           else
-            IFS='.' read -r MAJOR MINOR PATCH <<<"${LAST_TAG#v}"
+            # Parse version numbers safely
+            VERSION="${LAST_TAG#v}"
+            IFS='.' read -r MAJOR MINOR PATCH <<<"$VERSION"
+            MAJOR=${MAJOR:-0}
+            MINOR=${MINOR:-0}
+            PATCH=${PATCH:-0}
             PATCH=$((PATCH + 1))
-            NEW_TAG="v$MAJOR.$MINOR.$PATCH"
           fi
+      
+          NEW_TAG="v$MAJOR.$MINOR.$PATCH"
       
           # Ensure tag doesn’t already exist remotely
           while git ls-remote --tags origin | grep -q "refs/tags/$NEW_TAG"; do
@@ -41,13 +49,14 @@ jobs:
           echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
 
       - name: Create and push new tag
-        id: create_tag
+        env:
+          TAG: ${{ steps.get_version.outputs.new_tag }}
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git tag ${{ steps.get_version.outputs.new_tag }}
-          git push origin ${{ steps.get_version.outputs.new_tag }}
-          echo "new_tag=${{ steps.get_version.outputs.new_tag }}" >> $GITHUB_OUTPUT
+          git tag "$TAG"
+          git push origin "$TAG"
+          echo "new_tag=$TAG" >> $GITHUB_OUTPUT
 
   docker-build:
     needs: version
