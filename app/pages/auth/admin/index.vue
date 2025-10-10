@@ -76,7 +76,7 @@ function searchFilter(filterSearch, filtereeGroups) {
 <style scoped>
 .contentHeader {
   display: grid;
-  grid-template-columns: 1fr 6.5fr 2fr 2fr 1.5fr;
+  grid-template-columns: 2fr 6fr 2fr 2fr 2fr;
 
   span {
     color: var(--color-sub-dark);
@@ -92,7 +92,7 @@ function searchFilter(filterSearch, filtereeGroups) {
 
 @media (max-width: 1366px) {
   .contentHeader {
-    grid-template-columns: 1.9fr 5.5fr 2fr 2fr 2fr;
+    grid-template-columns: 2.4fr 5fr 2fr 2fr 2fr;
   }
 
   .contentHeader > span {

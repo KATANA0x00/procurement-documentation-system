@@ -1,4 +1,41 @@
 <template>
+  <div
+    v-if="deletePop"
+    style="
+      z-index: 1;
+      top: 0;
+      left: 0;
+      background-color: rgba(128, 128, 128, 0.2);
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    "
+  >
+    <div
+      style="
+        border-radius: 10px;
+        padding: 20px 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--color-theme);
+      "
+    >
+      <span style="margin-bottom: 30px; font-size: 24px"
+        >ต้องการลบเอกสารเลขที่ 1234-1235 ใช่หรือไม่</span
+      >
+      <div style="width: 100%; display: flex; justify-content: space-around">
+        <button class="deleteBtn" @click="comfirmDelete(true)">ยืนยัน</button>
+        <button class="deleteBtn-cancel" @click="comfirmDelete(false)">
+          ยกเลิก
+        </button>
+      </div>
+    </div>
+  </div>
   <Filter
     v-model:filterActive="filterActive"
     v-model:filterSearch="filterSearch"
@@ -16,8 +53,15 @@
       <span>สถานะ</span>
       <span>ประเภท</span>
       <span>วันที่เข้า</span>
+      <span></span>
     </div>
-    <EXDoc v-for="item in items" :key="item.doc_id" :data="item" />
+    <EXDoc
+      v-for="item in items"
+      :key="item.id"
+      :data="item"
+      :deleteDocument
+      deleteable
+    />
   </Accordion>
 </template>
 
@@ -32,6 +76,9 @@ const filterSearch = ref("");
 
 const filteredGroups = ref([]);
 const rawGroups = ref([]);
+
+const deletePop = ref(false);
+const deleteDoc = ref(null);
 
 watchEffect(async () => {
   rawGroups.value = await $fetch(
@@ -73,28 +120,79 @@ function searchFilter(filterSearch, filtereeGroups) {
 
   return results;
 }
+
+function deleteDocument(deleteDocId) {
+  deletePop.value = true;
+  deleteDoc.value = deleteDocId;
+}
+
+async function comfirmDelete(confirm) {
+  if (!confirm) {
+    deletePop.value = false;
+    return;
+  }
+
+  const response = await $fetch(`/api/db/doc/remove/${deleteDoc.value}`, {
+    method: "POST",
+  });
+
+  deletePop.value = false;
+
+  if (response.success) {
+    await reloadNuxtApp();
+  }
+}
 </script>
 
 <style scoped>
 .contentHeader {
   display: grid;
-  grid-template-columns: 1.5fr 6.5fr 2fr 2fr 2fr;
-
+  grid-template-columns: 2fr 5.5fr 2fr 2fr 2fr 0.5fr;
   span {
     color: var(--color-sub-dark);
     font-size: 14px;
     margin: 10px;
   }
 
-  span:last-child {
+  span:nth-last-child(2) {
     justify-self: end;
     text-align: right;
   }
 }
 
+.deleteBtn {
+  background-color: transparent;
+  color: var(--color-orange);
+  border: 2px solid var(--color-orange);
+  border-radius: 10px;
+  padding: 10px 20px;
+  width: fit-content;
+  font-size: 18px;
+}
+
+.deleteBtn:hover {
+  background-color: var(--color-orange);
+  color: var(--color-theme);
+}
+
+.deleteBtn-cancel {
+  background-color: transparent;
+  color: var(--color-sub-dark);
+  border: 2px solid var(--color-sub-dark);
+  border-radius: 10px;
+  padding: 10px 20px;
+  width: fit-content;
+  font-size: 18px;
+}
+
+.deleteBtn-cancel:hover {
+  background-color: var(--color-sub-dark);
+  color: var(--color-theme);
+}
+
 @media (max-width: 1366px) {
   .contentHeader {
-    grid-template-columns: 1.9fr 5.5fr 2fr 2fr 2fr;
+    grid-template-columns: 2.4fr 4.5fr 2fr 2fr 2fr 0.5fr;
   }
 
   .contentHeader > span {

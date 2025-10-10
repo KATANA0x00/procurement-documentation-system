@@ -41,6 +41,10 @@
 </template>
 
 <script setup>
+useHead({
+  title: "PASADU : เข้าสู่ระบบ",
+});
+
 definePageMeta({
     layout: 'empty'
 })
