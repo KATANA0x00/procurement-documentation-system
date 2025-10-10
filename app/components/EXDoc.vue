@@ -1,6 +1,7 @@
 <template>
   <NuxtLink
     class="content"
+    :class="{ deleteable: deleteable }"
     :to="`${$route.fullPath.replace(/\/$/, '')}/document?doc=${data.id}`"
   >
     <span style="color: var(--color-sub-dark)"
@@ -13,6 +14,18 @@
     <span style="justify-self: end; text-align: right">{{
       formattedDate(data.edited_date)
     }}</span>
+    <button
+      v-if="deleteable && data.status === 'draft'"
+      style="padding: 0; background-color: transparent; border: none"
+      @click.prevent.stop="deleteDocument(data.id)"
+    >
+      <Icon
+        name="material-symbols:cancel-rounded"
+        size="1.5em"
+        style="color: var(--color-sub-dark); margin: 0"
+      />
+    </button>
+    <span v-if="deleteable && data.status !== 'draft'"></span>
   </NuxtLink>
 </template>
 
@@ -21,13 +34,21 @@ import { formattedDate } from "#imports";
 
 defineProps({
   data: { typee: JSON, require: true },
+  deleteable: {
+    type: Boolean,
+    required: false,
+  },
+  deleteDocument: {
+    type: Function,
+    required: false,
+  },
 });
 </script>
 
 <style scoped>
 .content {
   display: grid;
-  grid-template-columns: 1.5fr 6.5fr 2fr 2fr 2fr;
+  grid-template-columns: 2fr 6fr 2fr 2fr 2fr;
   cursor: pointer;
   border-radius: 8px;
   text-decoration: none;
@@ -38,9 +59,17 @@ defineProps({
   }
 }
 
+.content.deleteable {
+  grid-template-columns: 2fr 5.5fr 2fr 2fr 2fr 0.5fr;
+}
+
 @media (max-width: 1366px) {
   .content {
-    grid-template-columns: 1.8fr 5.5fr 2fr 2fr 2fr;
+    grid-template-columns: 2.3fr 5fr 2fr 2fr 2fr;
+  }
+
+  .content.deleteable {
+    grid-template-columns: 2.3fr 4.5fr 2fr 2fr 2fr 0.5fr;
   }
 
   .content > span {
