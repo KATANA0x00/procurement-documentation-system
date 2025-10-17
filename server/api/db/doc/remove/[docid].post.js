@@ -15,14 +15,10 @@ export default defineEventHandler(async event => {
     })
   }
 
-  await client.query(
-    `
-      DELETE FROM documents WHERE id = $1;
-      DELETE FROM paymentation WHERE doc_id = $1;
-      DELETE FROM logs WHERE doc_id = $1;
-    `,
-    [docid]
-  )
+  await client.query("DELETE FROM documents WHERE id = $1", [docid]);
+  await client.query("DELETE FROM paymentation WHERE doc_id = $1", [docid]);
+  await client.query("DELETE FROM logs WHERE doc_id = $1", [docid]);
+
 
   const uploadDir = path.join(uploadRoot, docid)
   try {
