@@ -67,7 +67,7 @@ export function header (data, idselect, Header, docmark = '') {
                 data.department +
                 ' เหตุผลความจำเป็นใช้ในงาน ' +
                 data.doc_reason +
-                ' ขอให้จัดซื้อวัสดุกการศึกษา ดังรายการต่อไปนี้',
+                ' ขอให้จัดซื้อวัสดุการศึกษา ดังรายการต่อไปนี้',
               colSpan: 4,
               leadingIndent: 24
             },

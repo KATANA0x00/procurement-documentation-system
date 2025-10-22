@@ -98,7 +98,7 @@ FROM new_doc;
       ]
     )
     docid = result.rows[0].id
-  } else {
+  } else if(docid > 0) {
     const res = await client.query(
       `
       SELECT

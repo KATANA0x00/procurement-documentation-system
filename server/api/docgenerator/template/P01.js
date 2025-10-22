@@ -147,7 +147,7 @@ export function docDefinition_P01 (data) {
           sign('นางสาวบุญยืน   กลัดแขก', 'นักวิชาการพัสดุ'),
           sign('ผู้ช่วยศาสตราจารย์ ดร.เปี่ยมภูมิ   สฤกพฤกษ์', 'รองคณบดี'),
           { text: ' ' },
-          { text: ' ' },
+          { text: 'อนุมัติ', alignment: 'center' },
           { text: ' ' },
           {
             text: [
