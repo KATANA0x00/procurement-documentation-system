@@ -3,6 +3,12 @@ import { connectPG } from '~~/server/api/connection'
 export default defineEventHandler(async event => {
   let { action, docid } = event.context.params
   const { userId, datas, dataPayment, message } = await readBody(event)
+
+  console.log("\n----------------------------")
+  console.log(`call ${action} by ${userId} on doc_id ${docid}`)
+  console.table(datas)
+  console.log("----------------------------\n")
+
   const isLog = action != 'save'
   const client = connectPG()
   client.connect()

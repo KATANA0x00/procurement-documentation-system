@@ -27,12 +27,12 @@
         <InputLabel v-model:value="data.doc_requester" style="flex: 1"
           >ผู้ขอให้จัดหา</InputLabel
         >
-        <InputLabel
+        <InputDropdown
           v-model:value="data.doc_department"
           :dropdown="departmentList"
           style="flex: 1"
           end
-          >สังกัด</InputLabel
+          >สังกัด</InputDropdown
         >
       </div>
       <InputLabel v-model:value="data.doc_reason" end>เพื่อใช้งาน</InputLabel>

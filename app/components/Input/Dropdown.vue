@@ -8,7 +8,8 @@
       <slot />
     </span>
     <div class="InputBox" :style="size ? { width: size } : { flex: 1 }">
-      <input type="text" @focus="isActive = true" v-model="value"/>
+      <button class="ovl-button" @click="isActive = !isActive"><span>{{ value }}</span></button>
+      <input type="text" @focus="isActive = true" v-model="value" hidden/>
       <button
         v-if="dropdown.length > 0 "
         :class="{ active: isActive }"
@@ -80,6 +81,19 @@ onBeforeUnmount(() => {
     position: relative;
     display: flex;
     align-items: center;
+
+    .ovl-button {
+      display: contents;
+
+      span {
+        text-align: start;
+        background-color: var(--color-sub-light);
+        border: 1px solid var(--color-sub-mid);
+        border-radius: 4px;
+        padding: 8px 12px;
+        width: 100%;
+      }
+    }
 
     input {
       background-color: var(--color-sub-light);
