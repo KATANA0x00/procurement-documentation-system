@@ -1,5 +1,4 @@
 <template>
-    {{ data }}
     <div
         v-if="popupComment"
         style="
