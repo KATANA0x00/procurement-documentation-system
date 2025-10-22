@@ -6,7 +6,10 @@ export default defineEventHandler(async event => {
   const isLog = action != 'save'
   const client = connectPG()
   client.connect()
-  
+  if(docid == undefined || docid == null) {
+    console.error(`docid null or undefined : ${docid}`)
+    return {action: false}
+  }
   // new document insert
   if (docid === 'new') {
     const result = await client.query(
