@@ -100,9 +100,8 @@ export function docDefinition_PJ1 (data) {
             {},
             {
               text: numBreak(
-                data.is_vat_included
-                  ? data.expenses_summary
-                  : (data.expenses_summary / 107) * 100
+                ((data.expenses_summary / 107) * 100)
+                // data.is_vat_included ? ((data.expenses_summary / 107) * 100) : data.expenses_summary
               ),
               alignment: 'right',
               colSpan: 2
