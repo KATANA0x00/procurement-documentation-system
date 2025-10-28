@@ -6,12 +6,11 @@ export default defineEventHandler(async event => {
 
   console.log("\n----------------------------")
   console.log(`call ${action} by ${userId} on doc_id ${docid}`)
-  console.table(datas)
   console.log("----------------------------\n")
 
   const isLog = action != 'save'
   const client = connectPG()
-  client.connect()
+  await client.connect()
   if(docid == undefined || docid == null) {
     console.error(`docid null or undefined : ${docid}`)
     return {action: false}

@@ -424,13 +424,14 @@ async function handleFileChange(event) {
 }
 
 const uploadFiles = async (docid = id) => {
+    console.log("frontend call upload")
     // --- Step 1: Upload new files ---
     const newFormData = new FormData();
     for (const item of data.value.doc_file) {
         const file = fileMap.value.get(item.name);
         if (file) {
             // new file (because it's still in fileMap)
-            newFormData.append("files", file, item.file);
+            newFormData.append("files", file, item.file)
         }
     }
 

@@ -21,6 +21,7 @@ export default defineEventHandler(async event => {
   const uploadDir = path.join(uploadRoot, docid)
   await mkdir(uploadDir, { recursive: true })
   for (const file of formData) {
+    console.log(file.filename)
     if (file.filename && file.data) {
       const filePath = path.join(uploadDir, file.filename)
       try {
