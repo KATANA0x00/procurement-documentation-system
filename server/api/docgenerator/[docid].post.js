@@ -2,6 +2,7 @@ import PdfPrinter from "pdfmake";
 import path from "path";
 import fs from "fs";
 import PDFMerger from "pdf-merger-js";
+import PDFDocument from "pdfkit";
 
 import { docDefinition_P01 } from "./template/P01";
 import { docDefinition_PJ1 } from "./template/PJ1";
@@ -57,6 +58,22 @@ async function buildDoc(key, data) {
     });
 }
 
+async function convertImageToPDF(imagePath) {
+    const tempPath = path.join(os.tmpdir(), `${uuidv4()}.pdf`);
+    return new Promise((resolve) => {
+        const doc = new PDFDocument({ autoFirstPage: false });
+        const stream = fs.createWriteStream(tempPath);
+        doc.pipe(stream);
+
+        const image = doc.openImage(imagePath);
+        doc.addPage({ size: [image.width, image.height] });
+        doc.image(imagePath, 0, 0);
+        doc.end();
+
+        stream.on("finish", () => resolve(tempPath));
+    });
+}
+
 export default defineEventHandler(async (event) => {
     let { docNeed } = await readBody(event);
     const { docid } = await event.context.params;
@@ -65,7 +82,7 @@ export default defineEventHandler(async (event) => {
     client.connect();
     const result = await client.query(
         `
-      SELECT
+    SELECT
         dc.doc_id_p01,
         dc.doc_id_pj1,
         dc.doc_type,
@@ -96,11 +113,11 @@ export default defineEventHandler(async (event) => {
         pm.list AS pm_list,
         TO_CHAR(doc_date_p01, 'YYYY-MM-DD') AS doc_date_p01,
         TO_CHAR(doc_date_pj1, 'YYYY-MM-DD') AS doc_date_pj1
-      FROM documents dc
-      LEFT JOIN departments dp ON dc.department = dp.id
-      LEFT JOIN paymentation pm ON dc.id = pm.doc_id
-      LEFT JOIN users u ON dp.procurementer = u.id
-      WHERE dc.id = $1
+    FROM documents dc
+    LEFT JOIN departments dp ON dc.department = dp.id
+    LEFT JOIN paymentation pm ON dc.id = pm.doc_id
+    LEFT JOIN users u ON dp.procurementer = u.id
+    WHERE dc.id = $1
     `,
         [docid]
     );
@@ -130,8 +147,17 @@ export default defineEventHandler(async (event) => {
         );
 
         for (const filePath of localFiles) {
-            if (fs.existsSync(filePath)) {
+            if (!fs.existsSync(filePath)) continue;
+
+            const ext = path.extname(filePath).toLowerCase();
+            if (ext === ".pdf") {
                 await merger.add(filePath);
+            } else if (ext === ".png" || ext === ".jpg" || ext === ".jpeg") {
+                const pdfPath = await convertImageToPDF(filePath);
+                await merger.add(pdfPath);
+                fs.unlinkSync(pdfPath); // optional cleanup
+            } else {
+                console.warn("Unsupported file type, skipping:", filePath);
             }
         }
     }

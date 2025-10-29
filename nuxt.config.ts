@@ -1,6 +1,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxt/icon"],
+  
   runtimeConfig: {
     CRYPTO_SECRET_KEY: process.env.CRYPTO_SECRET || '',
 
