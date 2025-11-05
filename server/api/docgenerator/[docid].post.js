@@ -3,6 +3,8 @@ import path from "path";
 import fs from "fs";
 import PDFMerger from "pdf-merger-js";
 import PDFDocument from "pdfkit";
+import os from "os";
+import { v4 as uuidv4 } from "uuid";
 
 import { docDefinition_P01 } from "./template/P01";
 import { docDefinition_PJ1 } from "./template/PJ1";

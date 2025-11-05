@@ -10,6 +10,6 @@ export default defineEventHandler(async (event) => {
         FROM departments
         ORDER BY id ASC
     `)
-
+    client.end()
     return rows;
 });

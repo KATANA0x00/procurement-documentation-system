@@ -19,7 +19,7 @@ export default defineEventHandler(async event => {
   await client.query("DELETE FROM paymentation WHERE doc_id = $1", [docid]);
   await client.query("DELETE FROM logs WHERE doc_id = $1", [docid]);
 
-
+  client.end()
   const uploadDir = path.join(uploadRoot, docid)
   try {
     await fs.rm(uploadDir, { recursive: true, force: true });
