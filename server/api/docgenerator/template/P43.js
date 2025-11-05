@@ -49,7 +49,7 @@ export function docDefinition_P43(data) {
                 widths: [42, '*', 24, '*'],
                 body: [
                     [
-                        { text: 'เรียน คณบดี คณะวิศวกรรมศาสตร์', bold: true, colSpan: 4 },
+                        { text: 'เรียน หัวหน้างานพัสดุ', bold: true, colSpan: 4 },
                         {},
                         {},
                         {}
