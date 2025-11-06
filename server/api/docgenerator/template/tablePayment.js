@@ -75,7 +75,7 @@ export function tablePayment (list, maxRows) {
               border: [true, false, true, false]
             },
             {
-              text: item.amount_s,
+              text: String(item.amount_s).padStart(2, '0'),
               alignment: 'center',
               border: [true, false, true, false]
             },

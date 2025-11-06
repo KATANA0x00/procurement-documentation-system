@@ -126,24 +126,19 @@ function summarize() {
 }
 
 watch(
-  () =>
-    datas.value.map((item) => ({
-      qty: item.qty,
-      price: item.price,
-      total: item.total,
-    })),
+  () => datas.value.map((item) => ({ qty: item.qty, price: item.price })), // do not watch total
   (newVal, oldVal) => {
     newVal.forEach((item, i) => {
       const old = oldVal?.[i];
       if (!old) return;
 
       if (item.qty !== old.qty || item.price !== old.price) {
-        datas.value[i].total = datas.value[i].qty * datas.value[i].price;
-      } else if (item.total !== old.total) {
-        if (datas.value[i].qty > 0) {
-          datas.value[i].price = datas.value[i].total / datas.value[i].qty;
-        }
+        // recalculate total when qty or price change
+        datas.value[i].total = parseFloat(
+          (datas.value[i].qty * datas.value[i].price).toFixed(2)
+        );
       }
+      // changes to total are ignored
     });
   },
   { deep: true }
