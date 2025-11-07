@@ -56,15 +56,15 @@
           >
             <span>{{
               dataPayment.list
-                ? dataPayment.list.reduce((acc, item) => acc + item.amount_b, 0)
-                : 0
+                ? dataPayment.list.reduce((acc, item) => acc + item.amount_b+(item.amount_s / 100), 0).toFixed(2)
+                : 0.00
             }}</span>
-            <span>.</span>
+            <!-- <span>.</span>
             <span>{{
               dataPayment.list
                 ? dataPayment.list.reduce((acc, item) => acc + item.amount_s, 0)
                 : 0
-            }}</span>
+            }}</span> -->
           </div>
           <span> บาท</span>
         </div>
@@ -153,6 +153,8 @@ function addRow() {
 function deleteRow(index) {
   dataPayment.value.list.splice(index, 1);
 }
+
+watch()
 </script>
 
 <style scoped>
