@@ -40,7 +40,7 @@ export function header (data, idselect, Header, docmark = '') {
             { text: 'เรื่อง ', bold: true, alignment: 'right' },
             {
               text:
-                'ขอให้จัดหารายงานขอ' +
+                (idselect == 'p01' ? 'ขอให้จัดหารายงานขอ' : 'รายงานขอ') +
                 data.doc_type +
                 ' ' +
                 data.doc_category +

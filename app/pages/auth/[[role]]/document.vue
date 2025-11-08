@@ -1,5 +1,53 @@
 <template>
     <div
+    v-if="popupVertify"
+        style="
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: rgba(128, 128, 128, 0.2);
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        "
+    >
+        <div
+            style="
+                display: flex;
+                flex-direction: column;
+                background-color: var(--color-theme);
+                padding: 40px;
+                border-radius: 10px;
+            "
+        >
+            <label
+                style="
+                    font-size: 24px;
+                    margin-bottom: 20px;
+                    color: var(--color-orange);
+                "
+                >ยืนยันการส่งเอกสาร</label
+            >
+            <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                <button
+                    style="border: none; border-radius: 7px; padding: 5px 15px; background-color: #20D897; cursor: pointer;"
+                    @click="validHandler()"
+                >
+                    <span style="color: var(--color-theme)">ยืนยัน</span>
+                </button>
+                <button
+                    style="border: none; border-radius: 7px; padding: 5px 15px; background-color: #fb4141; cursor: pointer;"
+                    @click="invalidHandler()"
+                >
+                    <span style="color: var(--color-theme)">ยกเลิก</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div
         v-if="popupComment"
         style="
             z-index: 1;
@@ -425,14 +473,14 @@ async function handleFileChange(event) {
 }
 
 const uploadFiles = async (docid = id) => {
-    console.log("frontend call upload")
+    console.log("frontend call upload");
     // --- Step 1: Upload new files ---
     const newFormData = new FormData();
     for (const item of data.value.doc_file) {
         const file = fileMap.value.get(item.name);
         if (file) {
             // new file (because it's still in fileMap)
-            newFormData.append("files", file, item.file)
+            newFormData.append("files", file, item.file);
         }
     }
 
@@ -504,14 +552,21 @@ async function actionDoc(status, stay = false) {
         message.value = result;
     }
 
+    if (status === "waiting") {
+        const result = await getVertify();
+        if (result === null) {
+            return false;
+        }
+    }
+
     async function getDepartment_id() {
         const departments = await $fetch("/api/db/departmentlist");
         const found = departments.find(
             (dept) => dept.department_name === data.value.doc_department
         );
         return found ? found.department_id : 36;
-    };
-    const dp_id = await getDepartment_id()
+    }
+    const dp_id = await getDepartment_id();
 
     const response = await $fetch(`/api/db/doc/${status}/${id}`, {
         method: "POST",
@@ -560,6 +615,26 @@ function getComment() {
         };
         submitHandler.value = onSubmit;
         cancelHandler.value = onCancel;
+    });
+}
+
+const validHandler = ref(null);
+const invalidHandler = ref(null);
+const popupVertify = ref(false);
+function getVertify() {
+    popupVertify.value = true;
+
+    return new Promise((resolve) => {
+        const onValid = () => {
+            popupVertify.value = false;
+            resolve(true);
+        };
+        const onInvalid = () => {
+            popupVertify.value = false;
+            resolve(null); // ✅ indicate cancel
+        };
+        validHandler.value = onValid;
+        invalidHandler.value = onInvalid;
     });
 }
 
