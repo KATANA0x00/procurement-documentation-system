@@ -355,6 +355,7 @@ const tabList = [
 
 const quickPDFList = [
     { text: "พ.1", docNeed: ["P01"] },
+    { text: "พจ.1 + พ.43", docNeed: ["PJ1", "P43"] },
     { text: "พจ.1 + พ.43 + ใบสำคัญจ่าย", docNeed: ["PJ1", "P43", "PM"] },
     {
         text: "พ.1 + พจ.1 + พ.43 + ใบสำคัญจ่าย",
