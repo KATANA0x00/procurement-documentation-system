@@ -96,6 +96,8 @@ export default defineEventHandler(async (event) => {
         u.name AS procurementer,
         dp.name AS department,
         dp_main.name AS main_department,
+        dc.department AS department_id,
+        dc.main_department AS main_department_id,
         dp.uid AS uid_department,
         dc.doc_reason,
         dc.doc_committee,

@@ -48,7 +48,7 @@ export function header (data, idselect, Header, docmark = '') {
                 data.doc_money_source +
                 ' ประจำปี ' +
                 data.doc_money_year +
-                (idselect == 'p01' ? '' : 'ด้วยวิธีเฉพาะเจาะจง')
+                (idselect == 'p01' ? '' : ' ด้วยวิธีเฉพาะเจาะจง')
             },
             {},
             {}
@@ -65,8 +65,8 @@ export function header (data, idselect, Header, docmark = '') {
                 'ข้าพเจ้า ' +
                 data.doc_requester +
                 ' สังกัด ' +
-                data.main_department +
-                (idselect == 'pj1' ? (' ขอรายงานเสนอเพื่อขอ' + data.doc_type + 'วัสดุการศึกษาให้แก่ภาควิชา/หลักสูตร' + data.department) : '') + ' เหตุผลความจำเป็นใช้ในงาน ' +
+                data.main_department + 
+                (idselect == 'pj1' ? (' ขอรายงานเสนอเพื่อขอ' + data.doc_type + 'วัสดุการศึกษาให้แก่ ' + ( data.department_id === data.main_department_id ? "ภาควิชา":"หลักสูตร") + data.department) : '') + ' เหตุผลความจำเป็นใช้ในงาน ' +
                 data.doc_reason +
                 ' ขอให้จัดซื้อวัสดุการศึกษา ดังรายการต่อไปนี้',
               colSpan: 4,
