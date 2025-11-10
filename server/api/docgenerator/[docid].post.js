@@ -95,6 +95,7 @@ export default defineEventHandler(async (event) => {
         dp.principal AS principal,
         u.name AS procurementer,
         dp.name AS department,
+        dp_main.name AS main_department,
         dp.uid AS uid_department,
         dc.doc_reason,
         dc.doc_committee,
@@ -117,12 +118,14 @@ export default defineEventHandler(async (event) => {
         TO_CHAR(doc_date_pj1, 'YYYY-MM-DD') AS doc_date_pj1
     FROM documents dc
     LEFT JOIN departments dp ON dc.department = dp.id
+    JOIN departments dp_main ON dc.main_department = dp_main.id
     LEFT JOIN paymentation pm ON dc.id = pm.doc_id
     LEFT JOIN users u ON dp.procurementer = u.id
     WHERE dc.id = $1
     `,
         [docid]
     );
+
     client.end();
 
     if (docNeed.includes("PM")) {

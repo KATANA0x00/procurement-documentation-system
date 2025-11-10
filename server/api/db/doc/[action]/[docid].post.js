@@ -48,11 +48,12 @@ export default defineEventHandler(async event => {
           expenses_summary,
           is_vat_included,
           doc_date_p01,
-          doc_date_pj1
+          doc_date_pj1,
+          main_department
       ) VALUES (
           $1,  $2,  $3,  $4,  $5,  $6,  $7,  $8,  $9,
           $10, $11, $12, $13, $14, $15, $16, $17, $18,
-          $19, $20, $21, $22, $23, $24, $25, $26, $29, $30
+          $19, $20, $21, $22, $23, $24, $25, $26, $29, $30, $31
       )
       RETURNING id
     ),
@@ -99,7 +100,8 @@ FROM new_doc;
         dataPayment.type,
         JSON.stringify(dataPayment.list),
         datas.doc_date_p01,
-        datas.doc_date_pj1
+        datas.doc_date_pj1,
+        datas.main_department
       ]
     )
     docid = result.rows[0].id
@@ -157,7 +159,8 @@ FROM new_doc;
         expenses_summary = $25,
         is_vat_included = $26,
         doc_date_p01 = $30,
-        doc_date_pj1 = $31
+        doc_date_pj1 = $31,
+        main_department = $32
       WHERE id = $24
       RETURNING id
     )
@@ -198,7 +201,8 @@ FROM new_doc;
         JSON.stringify(dataPayment.list),
         datas.department,
         datas.doc_date_p01,
-        datas.doc_date_pj1
+        datas.doc_date_pj1,
+        datas.main_department
       ]
     )
   }

@@ -559,15 +559,16 @@ async function actionDoc(status, stay = false) {
         }
     }
 
-    async function getDepartment_id() {
+    async function getDepartment_id(departmentID) {
         const departments = await $fetch("/api/db/departmentlist");
         const found = departments.find(
-            (dept) => dept.department_name === data.value.doc_department
+            (dept) => dept.department_name === departmentID
         );
         return found ? found.department_id : 36;
     }
-    const dp_id = await getDepartment_id();
-
+    const dp_id = await getDepartment_id(data.value.doc_department);
+    const dp_main_id = await getDepartment_id(data.value.doc_main_department);
+    
     const response = await $fetch(`/api/db/doc/${status}/${id}`, {
         method: "POST",
         body: {
@@ -575,6 +576,7 @@ async function actionDoc(status, stay = false) {
             datas: {
                 ...data.value,
                 department: dp_id,
+                main_department: dp_main_id
             },
             dataPayment: dataPayment.value,
             message: message.value,

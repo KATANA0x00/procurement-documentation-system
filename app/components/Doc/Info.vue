@@ -36,6 +36,13 @@
         >
       </div>
       <InputLabel v-model:value="data.doc_reason" end>เพื่อใช้งาน</InputLabel>
+      <InputDropdown
+          v-model:value="data.doc_main_department"
+          :dropdown="departmentList"
+          style="flex: 1"
+          end
+          >ให้แก่ภาควิชา/หลักสูตร</InputDropdown
+        >
     </Accordion>
     <Accordion class="accompliceInfo" groupName="ผู้เกี่ยวข้อง" color="#20D897">
       <br />
