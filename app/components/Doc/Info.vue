@@ -37,7 +37,7 @@
       </div>
       <InputLabel v-model:value="data.doc_reason" end>เพื่อใช้งาน</InputLabel>
       <InputDropdown
-          v-model:value="data.doc_main_department"
+          v-model:value="data.doc_sub_department"
           :dropdown="departmentList"
           style="flex: 1"
           end

@@ -31,7 +31,7 @@ export default defineEventHandler(async event => {
       doc_money_year: '2569',
       doc_requester: null,
       doc_department: result.rows[0].name,
-      doc_main_department: result.rows[0].name,
+      doc_sub_department: result.rows[0].name,
       doc_reason: null,
       doc_committee: ['', '', ''],
       no_tor: null,
@@ -66,7 +66,7 @@ export default defineEventHandler(async event => {
       dc.doc_money_year,
       dc.doc_requester,
       dp.name AS doc_department,
-      dp_main.name AS doc_main_department,
+      dp_sub.name AS doc_sub_department,
       dc.doc_reason,
       dc.doc_committee,
       dc.no_tor,
@@ -89,7 +89,7 @@ export default defineEventHandler(async event => {
       TO_CHAR(doc_date_pj1, 'YYYY-MM-DD') AS doc_date_pj1
     FROM documents dc
     JOIN departments dp ON dc.department = dp.id
-    JOIN departments dp_main ON dc.main_department = dp_main.id
+    JOIN departments dp_sub ON dc.sub_department = dp_sub.id
     JOIN users ON users.id = dp.procurementer
     WHERE dc.id = $1
   `,

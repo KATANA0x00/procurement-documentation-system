@@ -567,7 +567,7 @@ async function actionDoc(status, stay = false) {
         return found ? found.department_id : 36;
     }
     const dp_id = await getDepartment_id(data.value.doc_department);
-    const dp_main_id = await getDepartment_id(data.value.doc_main_department);
+    const dp_main_id = await getDepartment_id(data.value.doc_sub_department);
     
     const response = await $fetch(`/api/db/doc/${status}/${id}`, {
         method: "POST",
@@ -576,7 +576,7 @@ async function actionDoc(status, stay = false) {
             datas: {
                 ...data.value,
                 department: dp_id,
-                main_department: dp_main_id
+                sub_department: dp_main_id
             },
             dataPayment: dataPayment.value,
             message: message.value,
