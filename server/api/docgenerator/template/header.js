@@ -66,7 +66,7 @@ export function header (data, idselect, Header, docmark = '') {
                 data.doc_requester +
                 ' สังกัด ' +
                 data.department + 
-                (idselect == 'pj1' ? (' ขอรายงานเสนอเพื่อขอ' + data.doc_type + 'วัสดุการศึกษาให้แก่ ' + ( data.department_id === data.sub_department_id ? "":"หลักสูตร") + data.sub_department) : '') + ' เหตุผลความจำเป็นใช้ในงาน ' +
+                (idselect == 'pj1' ? (' ขอรายงานเสนอเพื่อขอ' + data.doc_type + 'วัสดุการศึกษาให้แก่ ' + data.sub_department) : '') + ' เหตุผลความจำเป็นใช้ในงาน ' +
                 data.doc_reason +
                 ' ขอให้จัดซื้อวัสดุการศึกษา ดังรายการต่อไปนี้',
               colSpan: 4,
