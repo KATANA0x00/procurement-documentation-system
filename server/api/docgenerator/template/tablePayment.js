@@ -54,7 +54,7 @@ export function tablePayment (list, maxRows) {
           ],
           ...list.map((item, index) => [
             {
-              text: '1.',
+              text: ((index + 1) + '.'),
               alignment: 'center',
               border: [true, false, true, false]
             },
