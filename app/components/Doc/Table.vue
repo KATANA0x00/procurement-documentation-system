@@ -115,7 +115,7 @@
 import { numBreak } from "#imports";
 import draggable from "vuedraggable";
 const datas = defineModel("data", { default: [] });
-const isVAT = defineModel("isVAT", { default: false });
+const isVAT = defineModel("isVAT", { default: true });
 const summary = defineModel("summary", { default: 0 });
 
 function summarize() {

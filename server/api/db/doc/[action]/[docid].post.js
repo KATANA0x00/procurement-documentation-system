@@ -61,9 +61,10 @@ export default defineEventHandler(async event => {
   INSERT INTO paymentation (
     type,
     list,
-    doc_id
+    doc_id,
+    refund_person
   )
-  SELECT $27, $28, id
+  SELECT $27, $28, id, $32
   FROM new_doc
   RETURNING id AS payment_id
 )
@@ -76,32 +77,39 @@ FROM new_doc;
         action === 'save' ? 0 : 1,
         datas.doc_id_p01,
         datas.doc_id_pj1,
+
         datas.doc_type,
         datas.doc_category,
         datas.doc_money_source,
         datas.doc_money_year,
         datas.doc_requester,
+
         datas.doc_reason,
         JSON.stringify(datas.doc_committee),
         datas.no_tor,
         JSON.stringify(datas.uid_fund),
         JSON.stringify(datas.uid_plan),
+
         JSON.stringify(datas.uid_work_main),
         JSON.stringify(datas.uid_work_sub),
         JSON.stringify(datas.uid_work_minor),
         JSON.stringify(datas.uid_expenses_category),
         JSON.stringify(datas.uid_expenses_type),
+
         JSON.stringify(datas.uid_expenses_subtype),
         JSON.stringify(datas.uid_expenses_minor),
         JSON.stringify(datas.doc_list),
         JSON.stringify(datas.doc_file ?? []),
         datas.expenses_summary,
+
         datas.is_vat_included,
         dataPayment.type,
         JSON.stringify(dataPayment.list),
         datas.doc_date_p01,
         datas.doc_date_pj1,
-        datas.sub_department
+
+        datas.sub_department,
+        dataPayment.refund_person
       ]
     )
     docid = result.rows[0].id
@@ -167,7 +175,8 @@ FROM new_doc;
     UPDATE paymentation
     SET
       type = $27,
-      list = $28
+      list = $28,
+      refund_person = $33
     WHERE doc_id IN (SELECT id FROM updated_doc);
   `,
       [
@@ -176,33 +185,40 @@ FROM new_doc;
         datas.doc_type,
         datas.doc_category,
         datas.doc_money_source,
+
         datas.doc_money_year,
         datas.doc_requester,
         datas.doc_reason,
         JSON.stringify(datas.doc_committee),
         datas.no_tor,
+
         JSON.stringify(datas.uid_fund),
         JSON.stringify(datas.uid_plan),
         JSON.stringify(datas.uid_work_main),
         JSON.stringify(datas.uid_work_sub),
         JSON.stringify(datas.uid_work_minor),
+
         JSON.stringify(datas.uid_expenses_category),
         JSON.stringify(datas.uid_expenses_type),
         JSON.stringify(datas.uid_expenses_subtype),
         JSON.stringify(datas.uid_expenses_minor),
         JSON.stringify(datas.doc_list),
+
         JSON.stringify(datas.doc_file ?? []),
         action,
         res.rows[0].no,
         docid,
         datas.expenses_summary,
+
         datas.is_vat_included,
         dataPayment.type,
         JSON.stringify(dataPayment.list),
         datas.department,
         datas.doc_date_p01,
+
         datas.doc_date_pj1,
-        datas.sub_department
+        datas.sub_department,
+        dataPayment.refund_person
       ]
     )
   }

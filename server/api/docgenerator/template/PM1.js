@@ -1,6 +1,6 @@
 import { tablePayment } from './tablePayment'
 
-export function docDefinition_PM1 (data) {
+export function docDefinition_PM1 (data, refund_person = null) {
   return [
     {
       text: 'แบบฟอร์มส่งใบสำคัญจ่าย',
@@ -11,7 +11,7 @@ export function docDefinition_PM1 (data) {
     { text: ' ' },
     {
       text: [
-        'ชื่อ  ' + data.doc_requester + '  ภาควิชา  ' + data.department
+        'ชื่อ  ' + (refund_person === null ? data.doc_requester : refund_person) + '  ภาควิชา  ' + data.department
       ],
       alignment: 'center'
     },

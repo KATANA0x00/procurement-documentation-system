@@ -49,7 +49,7 @@ export default defineEventHandler(async event => {
       doc_list: [],
       doc_file: [],
       expenses_summary: 0,
-      is_vat_included: false,
+      is_vat_included: true,
       doc_date_p01: null,
       doc_date_pj1: null
     }

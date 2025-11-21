@@ -33,6 +33,10 @@ async function buildDoc(key, data) {
         P43: docDefinition_P43,
         PM1: docDefinition_PM1,
         PM2: docDefinition_PM2,
+        PM3: (data) => {
+            // Call PM1 with data and optionally add refund_person
+            return docDefinition_PM1(data, data.pm_refund_person);
+        },
     };
     if (!Definition[key]) return null;
 
@@ -116,6 +120,7 @@ export default defineEventHandler(async (event) => {
         dc.is_vat_included,
         pm.type AS pm_type,
         pm.list AS pm_list,
+        pm.refund_person AS pm_refund_person,
         TO_CHAR(doc_date_p01, 'YYYY-MM-DD') AS doc_date_p01,
         TO_CHAR(doc_date_pj1, 'YYYY-MM-DD') AS doc_date_pj1
     FROM documents dc
@@ -132,10 +137,12 @@ export default defineEventHandler(async (event) => {
 
     if (docNeed.includes("PM")) {
         const pmType = result.rows[0]?.pm_type;
-        if (pmType === "personal") {
+        if (pmType === "personal1") {
             docNeed = docNeed.map((d) => (d === "PM" ? "PM1" : d));
         } else if (pmType === "commercial") {
             docNeed = docNeed.map((d) => (d === "PM" ? "PM2" : d));
+        } else if (pmType === "personal2") {
+            docNeed = docNeed.map((d) => (d === "PM" ? "PM3" : d));
         }
     }
 

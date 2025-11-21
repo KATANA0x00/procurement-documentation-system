@@ -29,6 +29,7 @@
             />
             {{ item.text }}
           </div>
+          <input v-if="item.value === 'personal2' && dataPayment.type === 'personal2'" type="text" placeholder="ระบุบุคคลที่ต้องคืนเงิน" v-model="dataPayment.refund_person">
         </li>
       </ul>
     </Accordion>
@@ -135,8 +136,12 @@ const type_enum = [
     value: "commercial",
   },
   {
-    text: "คืนเงินบุคคล",
-    value: "personal",
+    text: "คืนเงินบุคคล (ผู้ขอให้จัดหา)",
+    value: "personal1",
+  },
+  {
+    text: "คืนเงินบุคคล (ผู้อื่น)",
+    value: "personal2",
   },
 ];
 
@@ -162,6 +167,19 @@ watch()
   list-style: none;
   padding: 10px;
   margin: 0;
+
+  li {
+    display: flex;
+
+    input {
+      background-color: var(--color-sub-light);
+      border: 1px solid var(--color-orange);
+      border-radius: 4px;
+      margin-left: 40px;
+      width: 400px;
+      padding: 2px 10px;
+    }
+  }
 }
 
 .type-list-item {

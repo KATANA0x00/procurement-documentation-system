@@ -20,7 +20,8 @@ export default defineEventHandler(async event => {
     `
     SELECT
       pm.type,
-      pm.list
+      pm.list,
+      pm.refund_person
     FROM paymentation pm
     WHERE pm.doc_id = $1
   `,
