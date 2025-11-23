@@ -48,10 +48,11 @@ defineProps({
 <style scoped>
 .content {
   display: grid;
-  grid-template-columns: 2fr 6fr 2fr 2fr 2fr;
+  grid-template-columns: 2.5fr 5fr 2fr 2fr 2.2fr;
   cursor: pointer;
   border-radius: 8px;
   text-decoration: none;
+  align-items: center;
 
   span {
     font-size: 14px;
@@ -65,7 +66,7 @@ defineProps({
 
 @media (max-width: 1366px) {
   .content {
-    grid-template-columns: 2.3fr 5fr 2fr 2fr 2fr;
+    grid-template-columns: 2.8fr 3fr 2fr 2fr 2.5fr;
   }
 
   .content.deleteable {

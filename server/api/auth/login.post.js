@@ -79,6 +79,5 @@ export default defineEventHandler(async event => {
   })
 
   const redirectPath = result.rows[0].user_level >= 2 ? '/auth/admin' : '/auth'
-
   return { isAuth: true, message: 'Login Successfull!', redirect: redirectPath }
 })

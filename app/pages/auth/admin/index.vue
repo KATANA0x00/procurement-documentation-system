@@ -34,7 +34,7 @@ const rawGroups = ref([]);
 
 watchEffect(async () => {
   rawGroups.value = await $fetch(
-    `/api/db/ex_procurement/${userInfo.value.id}?filter=${filterActive.value}`,
+    `/api/db/ex_procurement/${userInfo.value.user_level >= 3 ? 'all' : userInfo.value.id}?filter=${filterActive.value}`,
     {
       method: "GET",
     }
@@ -76,7 +76,7 @@ function searchFilter(filterSearch, filtereeGroups) {
 <style scoped>
 .contentHeader {
   display: grid;
-  grid-template-columns: 2fr 6fr 2fr 2fr 2fr;
+  grid-template-columns: 2.5fr 5fr 2fr 2fr 2.2fr;
 
   span {
     color: var(--color-sub-dark);
@@ -92,7 +92,7 @@ function searchFilter(filterSearch, filtereeGroups) {
 
 @media (max-width: 1366px) {
   .contentHeader {
-    grid-template-columns: 2.4fr 5fr 2fr 2fr 2fr;
+    grid-template-columns: 2.8fr 3fr 2fr 2fr 2.5fr;
   }
 
   .contentHeader > span {
