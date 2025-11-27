@@ -13,10 +13,13 @@ export default defineEventHandler(async (event) => {
     `);
 
     const moneyMax = await client.query(`
-        SELECT expenses_summary, name
-        FROM documents
-        LEFT JOIN departments ON departments.id = documents.department
-        ORDER BY expenses_summary DESC
+        SELECT 
+        dpt.name,
+        SUM(doc.expenses_summary) AS total_expenses
+        FROM documents doc
+        LEFT JOIN departments dpt ON dpt.id = doc.department
+        GROUP BY dpt.id, dpt.name
+        ORDER BY total_expenses DESC
         LIMIT 1;
     `);
 
@@ -39,7 +42,7 @@ export default defineEventHandler(async (event) => {
         AVG(process_seconds) * INTERVAL '1 second' AS avg_interval
     FROM doc_times dt
     LEFT JOIN departments dep ON dep.id = dt.department_id
-    WHERE dep.name IS NOT NULL
+    WHERE dep.name IS NOT NULL AND dep.id <> 36
     GROUP BY dep.name
     ORDER BY dep.name;
     `);
@@ -51,6 +54,6 @@ export default defineEventHandler(async (event) => {
             numDoc: numDoc.rows,
             moneyMax: moneyMax.rows[0],
         },
-        tableData: tableData.rows
+        tableData: tableData.rows,
     };
 });

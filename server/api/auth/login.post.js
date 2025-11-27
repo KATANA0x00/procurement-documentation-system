@@ -66,6 +66,7 @@ export default defineEventHandler(async event => {
     [sessionId, username]
   )
   client.end()
+  
   if (result.rows.length === 0) {
     throw new Error('User not found : Contact Administrator')
   }

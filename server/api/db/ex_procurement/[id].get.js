@@ -14,36 +14,36 @@ export default defineEventHandler(async (event) => {
     const query = () => {
         if (id === "all") {
             return `
-              SELECT
-                dp.name AS dp_name,
-                dc.id,
-                dc.doc_id_p01,
-                dc.doc_id_pj1,
-                dc.edited_date,
-                dc.status,
-                dc.doc_category,
-                dc.doc_requester
-              FROM departments dp
-              JOIN documents dc ON dc.department = dp.id
-              WHERE dc.status <> 'draft'
-              ${filter === "All" ? "" : "WHERE dc.status ILIKE $1"}
-              `;
+                SELECT
+                    dp.name AS dp_name,
+                    dc.id,
+                    dc.doc_id_p01,
+                    dc.doc_id_pj1,
+                    dc.edited_date,
+                    dc.status,
+                    dc.doc_category,
+                    dc.doc_requester
+                FROM departments dp
+                JOIN documents dc ON dc.department = dp.id
+                WHERE dc.status <> 'draft'
+                ${filter === "All" ? "" : "AND dc.status ILIKE $1"}
+                `;
         } else {
             return `
-              SELECT
-                dp.name AS dp_name,
-                dc.id,
-                dc.doc_id_p01,
-                dc.doc_id_pj1,
-                dc.edited_date,
-                dc.status,
-                dc.doc_category,
-                dc.doc_requester
-              FROM departments dp
-              JOIN documents dc ON dc.department = dp.id
-              WHERE dp.procurementer ILIKE $1
-              ${filter === "All" ? "" : "AND dc.status ILIKE $2"}
-              `;
+                SELECT
+                    dp.name AS dp_name,
+                    dc.id,
+                    dc.doc_id_p01,
+                    dc.doc_id_pj1,
+                    dc.edited_date,
+                    dc.status,
+                    dc.doc_category,
+                    dc.doc_requester
+                FROM departments dp
+                JOIN documents dc ON dc.department = dp.id
+                WHERE dp.procurementer ILIKE $1
+                ${filter === "All" ? "" : "AND dc.status ILIKE $2"}
+                `;
         }
     };
 

@@ -95,26 +95,32 @@
                     >
                     <span>{{
                         Object.keys(value.avg_interval).length > 0
-                            ? (value.avg_interval.hours / 24).toFixed(0) +
+                            ? (value.avg_interval.hours != null ? (value.avg_interval.hours / 24).toFixed(0) : '0') +
                               " วัน " +
-                              (value.avg_interval.hours % 24).toFixed(0) +
-                              " ชม. "
+                              (value.avg_interval.hours != null ? (value.avg_interval.hours % 24).toFixed(0) : '0') +
+                              " ชม. " +
+                              (value.avg_interval.minutes).toFixed(0) +
+                              " น."
                             : "-"
                     }}</span>
                     <span>{{
                         Object.keys(value.min_interval).length > 0
-                            ? (value.min_interval.hours / 24).toFixed(0) +
+                            ? (value.min_interval.hours != null ? (value.min_interval.hours / 24).toFixed(0) : '0') +
                               " วัน " +
-                              (value.min_interval.hours % 24).toFixed(0) +
-                              " ชม. "
+                              (value.min_interval.hours != null ? (value.min_interval.hours % 24).toFixed(0) : '0') +
+                              " ชม. " +
+                              (value.min_interval.minutes).toFixed(0) +
+                              " น."
                             : "-"
                     }}</span>
                     <span>{{
                         Object.keys(value.max_interval).length > 0
-                            ? (value.max_interval.hours / 24).toFixed(0) +
+                            ? (value.max_interval.hours != null ? (value.max_interval.hours / 24).toFixed(0) : '0') +
                               " วัน " +
-                              (value.max_interval.hours % 24).toFixed(0) +
-                              " ชม. "
+                              (value.max_interval.hours != null ? (value.max_interval.hours % 24).toFixed(0) : '0') +
+                              " ชม. " +
+                              (value.max_interval.minutes).toFixed(0) +
+                              " น."
                             : "-"
                     }}</span>
                 </div>
@@ -178,19 +184,31 @@ const maxTime = secondsToDHMS(overallMax.seconds);
 const sumList = [
     {
         Header: "งบประมาณที่ใช้",
-        Result: numBreak(summaryData.value.moneyMax.expenses_summary) + ' บาท',
+        Result: numBreak(summaryData.value.moneyMax.total_expenses) + " บาท",
         Department: summaryData.value.moneyMax.name,
         Color: 0,
     },
     {
         Header: "เวลาดำเนินการน้อยที่สุด",
-        Result: minTime.days + " วัน " + minTime.hours + " ชม.",
+        Result:
+            minTime.days +
+            " วัน " +
+            minTime.hours +
+            " ชม. " +
+            minTime.minutes +
+            " น.",
         Department: overallMin.department,
         Color: 1,
     },
     {
         Header: "เวลาดำเนินการมากที่สุด",
-        Result: maxTime.days + " วัน " + maxTime.hours + " ชม.",
+        Result:
+            maxTime.days +
+            " วัน " +
+            maxTime.hours +
+            " ชม. " +
+            maxTime.minutes +
+            " น.",
         Department: overallMax.department,
         Color: 4,
     },
@@ -213,7 +231,7 @@ const sumList = [
 
     .header {
         display: grid;
-        grid-template-columns: 3fr repeat(3, 1fr);
+        grid-template-columns: 2.5fr repeat(3, 1fr);
         padding: 10px 10px;
         margin-bottom: 5px;
         border-radius: 10px;
@@ -229,7 +247,7 @@ const sumList = [
 
     .container {
         display: grid;
-        grid-template-columns: 3fr repeat(3, 1fr);
+        grid-template-columns: 2.5fr repeat(3, 1fr);
         padding: 5px 10px;
     }
 }
@@ -333,6 +351,9 @@ const sumList = [
     .card-department {
         font-size: 18px;
     }
+    .container > span {
+        font-size: 10px;
+    }
 }
 
 /* Responsive for screen under 1280px */
@@ -354,6 +375,9 @@ const sumList = [
     }
     .card-department {
         font-size: 16px;
+    }
+    .container > span {
+        font-size: 10px;
     }
 }
 </style>
