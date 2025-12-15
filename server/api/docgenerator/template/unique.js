@@ -32,7 +32,7 @@ export function unique (data) {
             {},
             {},
             {
-              text: data.department,
+              text: data.sub_department,
               colSpan: 2
             },
             {},
