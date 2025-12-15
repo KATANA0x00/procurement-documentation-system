@@ -102,7 +102,7 @@ export default defineEventHandler(async (event) => {
         dp_sub.name AS sub_department,
         dc.department AS department_id,
         dc.sub_department AS sub_department_id,
-        dp.uid AS uid_department,
+        dp_sub.uid AS uid_department,
         dc.doc_reason,
         dc.doc_committee,
         dc.uid_fund,
