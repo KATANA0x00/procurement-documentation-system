@@ -93,36 +93,54 @@
                         "
                         >{{ value.department_name }}</span
                     >
-                    <span>{{
-                        Object.keys(value.avg_interval).length > 0
-                            ? (value.avg_interval.hours != null ? (value.avg_interval.hours / 24).toFixed(0) : '0') +
-                              " วัน " +
-                              (value.avg_interval.hours != null ? (value.avg_interval.hours % 24).toFixed(0) : '0') +
-                              " ชม. " +
-                              (value.avg_interval.minutes).toFixed(0) +
-                              " น."
-                            : "-"
-                    }}</span>
-                    <span>{{
-                        Object.keys(value.min_interval).length > 0
-                            ? (value.min_interval.hours != null ? (value.min_interval.hours / 24).toFixed(0) : '0') +
-                              " วัน " +
-                              (value.min_interval.hours != null ? (value.min_interval.hours % 24).toFixed(0) : '0') +
-                              " ชม. " +
-                              (value.min_interval.minutes).toFixed(0) +
-                              " น."
-                            : "-"
-                    }}</span>
-                    <span>{{
-                        Object.keys(value.max_interval).length > 0
-                            ? (value.max_interval.hours != null ? (value.max_interval.hours / 24).toFixed(0) : '0') +
-                              " วัน " +
-                              (value.max_interval.hours != null ? (value.max_interval.hours % 24).toFixed(0) : '0') +
-                              " ชม. " +
-                              (value.max_interval.minutes).toFixed(0) +
-                              " น."
-                            : "-"
-                    }}</span>
+                    <span>
+                        {{
+                            Object.keys(value.avg_interval).length > 0
+                                ? (
+                                      (value.avg_interval.hours ?? 0) / 24
+                                  ).toFixed(0) +
+                                  " วัน " +
+                                  (
+                                      (value.avg_interval.hours ?? 0) % 24
+                                  ).toFixed(0) +
+                                  " ชม. " +
+                                  (value.avg_interval.minutes ?? 0).toFixed(0) +
+                                  " น."
+                                : "-"
+                        }}
+                    </span>
+                    <span>
+                        {{
+                            Object.keys(value.min_interval).length > 0
+                                ? (
+                                      (value.min_interval.hours ?? 0) / 24
+                                  ).toFixed(0) +
+                                  " วัน " +
+                                  (
+                                      (value.min_interval.hours ?? 0) % 24
+                                  ).toFixed(0) +
+                                  " ชม. " +
+                                  (value.min_interval.minutes ?? 0).toFixed(0) +
+                                  " น."
+                                : "-"
+                        }}
+                    </span>
+                    <span>
+                        {{
+                            Object.keys(value.max_interval).length > 0
+                                ? (
+                                      (value.max_interval.hours ?? 0) / 24
+                                  ).toFixed(0) +
+                                  " วัน " +
+                                  (
+                                      (value.max_interval.hours ?? 0) % 24
+                                  ).toFixed(0) +
+                                  " ชม. " +
+                                  (value.max_interval.minutes ?? 0).toFixed(0) +
+                                  " น."
+                                : "-"
+                        }}
+                    </span>
                 </div>
             </div>
         </div>
@@ -132,11 +150,13 @@
 <script setup>
 const summaryData = ref({});
 const tableData = ref([]);
-
+const numberOfEdit = ref(0)
 const response = await $fetch("/api/db/dashboard");
+console.log(response);
 if (response.ok) {
     summaryData.value = response.summaryData;
     tableData.value = response.tableData;
+    numberOfEdit.value = response.numberOfEdit;
 }
 
 function intervalToSeconds(interval) {
@@ -182,11 +202,17 @@ const minTime = secondsToDHMS(overallMin.seconds);
 const maxTime = secondsToDHMS(overallMax.seconds);
 
 const sumList = [
+    // {
+    //     Header: "งบประมาณที่ใช้",
+    //     Result: numBreak(summaryData.value.moneyMax.total_expenses) + " บาท",
+    //     Department: summaryData.value.moneyMax.name,
+    //     Color: 0,
+    // },
     {
-        Header: "งบประมาณที่ใช้",
-        Result: numBreak(summaryData.value.moneyMax.total_expenses) + " บาท",
-        Department: summaryData.value.moneyMax.name,
-        Color: 0,
+        Header: "จำนวนครั้งที่ส่งแก้ไข",
+        Result: numberOfEdit.value,
+        Department: "ครั้ง",
+        Color: 0
     },
     {
         Header: "เวลาดำเนินการน้อยที่สุด",

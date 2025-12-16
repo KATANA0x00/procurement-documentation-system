@@ -47,6 +47,32 @@ export default defineEventHandler(async (event) => {
     ORDER BY dep.name;
     `);
 
+    const numberOfEdit = await client.query(
+        `
+        WITH status_history AS (
+        SELECT
+            doc_id,
+            action_date,
+            doc_data::jsonb ->> 'status' AS status,
+            LAG(doc_data::jsonb ->> 'status')
+            OVER (PARTITION BY doc_id ORDER BY action_date) AS prev_status
+        FROM logs
+        ),
+        edit_counts AS (
+        SELECT
+            doc_id,
+            COUNT(*) AS edit_change_count
+        FROM status_history
+        WHERE status = 'edit'
+            AND prev_status IS DISTINCT FROM 'edit'
+        GROUP BY doc_id
+        )
+        SELECT
+        SUM(edit_change_count) AS total_edit_change_count
+        FROM edit_counts;
+        `
+    );
+
     client.end();
     return {
         ok: true,
@@ -55,5 +81,6 @@ export default defineEventHandler(async (event) => {
             moneyMax: moneyMax.rows[0],
         },
         tableData: tableData.rows,
+        numberOfEdit: numberOfEdit.rows[0].total_edit_change_count,
     };
 });
