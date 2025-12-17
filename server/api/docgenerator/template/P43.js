@@ -18,6 +18,7 @@ function getMaxRows(len) {
 }
 
 export function docDefinition_P43(data) {
+    const total = data.pm_list.reduce((acc, item) => acc + item.amount_b + (item.amount_s*0.01), 0)
     const maxRows = getMaxRows(data.doc_list.length)
 
     const paddedRows = Array.from(
@@ -154,7 +155,8 @@ export function docDefinition_P43(data) {
                             border: [false, false, false, false]
                         },
                         {},
-                        {text: numBreak(data.expenses_summary), alignment: 'right'},
+                        // {text: numBreak(data.expenses_summary), alignment: 'right'},
+                        {text: total, alignment: 'right'},
                         {},
                     ]
                 ]
