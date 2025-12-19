@@ -1,4 +1,5 @@
 <template>
+  {{ dataPayment }}
   <div>
     <Accordion groupName="ประเภทการคืนเงิน" color="#FF8800">
       <ul class="type-list">
@@ -158,8 +159,6 @@ function addRow() {
 function deleteRow(index) {
   dataPayment.value.list.splice(index, 1);
 }
-
-watch()
 </script>
 
 <style scoped>

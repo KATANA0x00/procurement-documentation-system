@@ -4,6 +4,18 @@ export default defineEventHandler(async event => {
   let { action, docid } = event.context.params
   const { userId, datas, dataPayment, message } = await readBody(event)
 
+  if (!Array.isArray(dataPayment?.list)) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "dataPayment.list must be an array",
+    });
+  }
+
+  dataPayment.list.forEach(item => {
+    item.amount_b = Number.isFinite(+item.amount_b) ? +item.amount_b : 0;
+    item.amount_s = Number.isFinite(+item.amount_s) ? +item.amount_s : 0;
+  });
+
   console.log("\n----------------------------")
   console.log(`call ${action} by ${userId} on doc_id ${docid}`)
   console.log("----------------------------\n")

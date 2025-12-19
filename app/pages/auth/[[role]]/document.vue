@@ -750,11 +750,21 @@ const data = ref(
         }
     )
 );
+const dataPayment = ref([]);
+dataPayment.value = await $fetch(`/api/db/payment_document/${id}`, {
+  method: "GET",
+});
+watch(
+  () => dataPayment.value.list,
+  (list) => {
+    if (!Array.isArray(list)) return;
 
-const dataPayment = ref(
-    await $fetch(`/api/db/payment_document/${id}`, {
-        method: "GET",
-    })
+    list.forEach(item => {
+      item.amount_b = Number.isFinite(+item.amount_b) ? +item.amount_b : 0;
+      item.amount_s = Number.isFinite(+item.amount_s) ? +item.amount_s : 0;
+    });
+  },
+  { deep: true, immediate: true }
 );
 // click outside logic
 const docRef = ref(null);
