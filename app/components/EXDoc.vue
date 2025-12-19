@@ -15,9 +15,9 @@
       formattedDate(data.edited_date)
     }}</span>
     <button
-      v-if="deleteable && data.status === 'draft'"
+      v-if="deleteable"
       style="padding: 0; background-color: transparent; border: none"
-      @click.prevent.stop="deleteDocument(data.id)"
+      @click.prevent.stop="deleteDocument(data.id, data.doc_id_p01+' - '+data.doc_id_pj1)"
     >
       <Icon
         name="material-symbols:cancel-rounded"
@@ -25,7 +25,17 @@
         style="color: var(--color-sub-dark); margin: 0"
       />
     </button>
-    <span v-if="deleteable && data.status !== 'draft'"></span>
+    <button
+      v-else
+      style="padding: 0; background-color: transparent; border: none"
+      disabled
+    >
+      <Icon
+        name="material-symbols:cancel-rounded"
+        size="1.5em"
+        style="color: transparent; margin: 0"
+      />
+    </button>
   </NuxtLink>
 </template>
 
@@ -48,7 +58,7 @@ defineProps({
 <style scoped>
 .content {
   display: grid;
-  grid-template-columns: 2.5fr 5fr 2fr 2fr 2.2fr;
+  grid-template-columns: 2fr 5.5fr 2fr 2fr 2fr 0.5fr;
   cursor: pointer;
   border-radius: 8px;
   text-decoration: none;
@@ -66,7 +76,7 @@ defineProps({
 
 @media (max-width: 1366px) {
   .content {
-    grid-template-columns: 2.8fr 3fr 2fr 2fr 2.5fr;
+    grid-template-columns: 2fr 5.5fr 2fr 2fr 2fr 0.5fr;
   }
 
   .content.deleteable {

@@ -32,7 +32,7 @@ export function tablePayment (list, maxRows) {
               rowSpan: 2,
               margin: [0, 10, 0, 0]
             },
-            { text: 'ใบส่งของ', alignment: 'center', colSpan: 2 },
+            { text: 'ใบส่งของ/ใบเสร็จรับเงิน', alignment: 'center', colSpan: 2 },
             {},
             { text: 'จำนวนเงิน', alignment: 'center', colSpan: 2 },
             {},

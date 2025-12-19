@@ -26,7 +26,7 @@
       "
     >
       <span style="margin-bottom: 30px; font-size: 24px"
-        >ต้องการลบเอกสารเลขที่ 1234-1235 ใช่หรือไม่</span
+        >ต้องการลบเอกสารเลขที่ {{ deleteText }} ใช่หรือไม่</span
       >
       <div style="width: 100%; display: flex; justify-content: space-around">
         <button class="deleteBtn" @click="comfirmDelete(true)">ยืนยัน</button>
@@ -60,7 +60,7 @@
       :key="item.id"
       :data="item"
       :deleteDocument
-      deleteable
+      :deleteable="item.status === 'draft'"
     />
   </Accordion>
 </template>
@@ -79,6 +79,7 @@ const rawGroups = ref([]);
 
 const deletePop = ref(false);
 const deleteDoc = ref(null);
+const deleteText = ref('')
 
 watchEffect(async () => {
   rawGroups.value = await $fetch(
@@ -121,9 +122,10 @@ function searchFilter(filterSearch, filtereeGroups) {
   return results;
 }
 
-function deleteDocument(deleteDocId) {
-  deletePop.value = true;
-  deleteDoc.value = deleteDocId;
+function deleteDocument(deleteDocId, text="-") {
+    deletePop.value = true;
+    deleteDoc.value = deleteDocId;
+    deleteText.value = text;
 }
 
 async function comfirmDelete(confirm) {
