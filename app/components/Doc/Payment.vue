@@ -1,5 +1,4 @@
 <template>
-  {{ dataPayment }}
   <div>
     <Accordion groupName="ประเภทการคืนเงิน" color="#FF8800">
       <ul class="type-list">
