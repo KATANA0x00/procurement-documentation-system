@@ -22,7 +22,7 @@ export function docDefinition_PM2 (data) {
       alignment: 'center'
     },
     { text: ' ' },
-    ...tablePayment(data.pm_list,25),
+    ...tablePayment(data.pm_list,24),
     { text: ' ' },
     {
       text: [
