@@ -1,7 +1,7 @@
 export default function formattedDate (inputDate, withTime = false) {
   const date = new Date(inputDate.replace(' ', 'T'))
   date.setHours(date.getHours() + 7)
-
+  
   let formattedDate = date
     .toLocaleDateString('th-GB', {
       weekday: 'long',

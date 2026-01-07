@@ -156,7 +156,7 @@ export function docDefinition_P43(data) {
                         },
                         {},
                         // {text: numBreak(data.expenses_summary), alignment: 'right'},
-                        {text: total, alignment: 'right'},
+                        {text: total.toFixed(2), alignment: 'right'},
                         {},
                     ]
                 ]
