@@ -12,6 +12,7 @@ import { docDefinition_P43 } from "./template/P43";
 
 import { docDefinition_PM1 } from "./template/PM1";
 import { docDefinition_PM2 } from "./template/PM2";
+import { docDefinition_PM4 } from "./template/PM4";
 
 import { connectPG } from "../connection";
 
@@ -34,8 +35,10 @@ async function buildDoc(key, data) {
         PM1: docDefinition_PM1,
         PM2: docDefinition_PM2,
         PM3: (data) => {
-            // Call PM1 with data and optionally add refund_person
             return docDefinition_PM1(data, data.pm_refund_person);
+        },
+        PM4: (data) => {
+            return docDefinition_PM4(data, data.pm_refund_person);
         },
     };
     if (!Definition[key]) return null;
@@ -143,6 +146,8 @@ export default defineEventHandler(async (event) => {
             docNeed = docNeed.map((d) => (d === "PM" ? "PM2" : d));
         } else if (pmType === "personal2") {
             docNeed = docNeed.map((d) => (d === "PM" ? "PM3" : d));
+        } else if (pmType === "rental") {
+            docNeed = docNeed.map((d) => (d === "PM" ? "PM4" : d));
         }
     }
 
