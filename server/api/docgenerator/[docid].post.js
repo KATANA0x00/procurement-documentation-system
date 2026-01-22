@@ -92,6 +92,7 @@ export default defineEventHandler(async (event) => {
     const result = await client.query(
         `
     SELECT
+        dc.created_date,
         dc.doc_id_p01,
         dc.doc_id_pj1,
         dc.doc_type,
