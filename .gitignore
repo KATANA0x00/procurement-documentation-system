@@ -27,3 +27,4 @@ logs
 upload
 docker-compose.yml
 /uploads
+package-lock.json
